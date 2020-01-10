@@ -17,7 +17,7 @@ public class Main {
             numbers.add(scanner.nextInt());
         }
 
-        for (final Integer number : numbers) {
+        for (Integer number : numbers) {
             if (number == 0)
                 System.out.println("NULL");
             else
@@ -27,14 +27,14 @@ public class Main {
         scanner.close();
     }
 
-    public static String evenOrOdd(final Integer num) {
+    public static String evenOrOdd(Integer num) {
         if ((num % 2) == 0)
             return "EVEN";
         else
             return "ODD";
     }
 
-    public static String posOrNeg(final Integer num) {
+    public static String posOrNeg(Integer num) {
         if ( num > 0 ) return "POSITIVE";
         else return "NEGATIVE";
     }

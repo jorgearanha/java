@@ -26,7 +26,7 @@ public class Main {
         String destination = map.get(ddd);
 
         if (destination != null)
-            resposta = map.get(ddd);
+            resposta = destination;
 
         System.out.print(resposta + "\n");
 
