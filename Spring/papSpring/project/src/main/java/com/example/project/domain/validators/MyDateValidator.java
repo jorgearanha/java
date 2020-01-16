@@ -12,7 +12,7 @@ public class MyDateValidator implements ConstraintValidator<MyDate, Date> {
     public boolean isValid(Date date, ConstraintValidatorContext context) {
         if (date == null)
             return false;
-
+    
         return date.after(ini()) && date.before(end());
     }
 

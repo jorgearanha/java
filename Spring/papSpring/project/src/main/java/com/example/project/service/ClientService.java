@@ -1,39 +1,40 @@
 package com.example.project.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import com.example.project.domain.dto.request.ClientCreateRequest;
-import com.example.project.domain.dto.response.ClientResponse;
+import com.example.project.domain.entities.Client;
+import com.example.project.exception.DataNotFoundException;
+import com.example.project.repository.ClientRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClientService {
 
-    public ClientResponse createClient(ClientCreateRequest model) {
+    private final ClientRepository clientRepository;
 
-        // NoArgsConstructor
-        ClientResponse returnModel = new ClientResponse();
-
-        // Data
-        returnModel.setId(1);
-        returnModel.setName(model.getName());
-        returnModel.setPhone(model.getPhone());
-
-        return returnModel;
+    @Autowired
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
-    public List<ClientResponse> listClient() {
-        List<ClientResponse> list = new ArrayList<ClientResponse>();
-
-        // AllArgsConstructor
-        list.add(new ClientResponse(1, "Nome", "119876543"));
-
-        // Builder
-        list.add(ClientResponse.builder().id(2).name("Nome").phone("119876543").build());
-
-        return list;
+    public Client createClient(Client model) {
+        return clientRepository.save(model);
     }
+
+    public void deleteClient(Integer id) {
+        clientRepository.deleteById(id);
+    }
+
+    public List<Client> listClient() {
+        return clientRepository.findAll();
+    }
+
+    public Client findById(Integer id) {
+        Optional<Client> client = clientRepository.findById(id);
+        return client.orElseThrow(() -> new DataNotFoundException("Client Not found"));
+	}
 
 }
