@@ -58,19 +58,22 @@ public class ClientController {
 		return ResponseEntity.ok(mapper.toDto(client));
 	}
 
+	@GetMapping(value = "/distinct")
+	public ResponseEntity<List<String>> listDistinct() {
+		return ResponseEntity.ok(clientService.listDistinct());
+	}
+
 	@DeleteMapping(value = "/{id}")
-	public void delete(@PathVariable Integer id) {
+	public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
 		clientService.deleteClient(id);
+		return ResponseEntity.ok(true);
 	}
 
 	@PutMapping(value="/{id}")
 	public ResponseEntity<ClientResponse> put(@PathVariable Integer id, @RequestBody ClientCreateRequest model) {
-		
-		Client client = clientService.findById(id);
-		client.setName(model.getName());
-		client.setPhone(model.getPhone());
-
-		return ResponseEntity.ok(mapper.toDto(clientService.createClient(client)));
+		Client newClient = mapper.fromDto(model);
+		return ResponseEntity.ok(
+			mapper.toDto(clientService.putClient(id, newClient)));
 	}
 
 }

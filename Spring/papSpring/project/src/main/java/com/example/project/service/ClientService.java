@@ -24,8 +24,15 @@ public class ClientService {
         return clientRepository.save(model);
     }
 
+    public Client putClient(Integer id, Client model) {
+        Client client = findById(id);
+        client.setName(model.getName());
+        client.setPhone(model.getPhone());
+        return clientRepository.save(client);
+    }
+
     public void deleteClient(Integer id) {
-        clientRepository.deleteById(id);
+        clientRepository.delete(findById(id));
     }
 
     public List<Client> listClient() {
@@ -35,6 +42,10 @@ public class ClientService {
     public Client findById(Integer id) {
         Optional<Client> client = clientRepository.findById(id);
         return client.orElseThrow(() -> new DataNotFoundException("Client Not found"));
+    }
+    
+    public  List<String> listDistinct() {
+        return clientRepository.listDistinct();
 	}
 
 }
