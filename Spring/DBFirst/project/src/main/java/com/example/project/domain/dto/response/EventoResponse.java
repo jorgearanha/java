@@ -2,6 +2,9 @@ package com.example.project.domain.dto.response;
 
 import java.util.Date;
 
+import com.example.project.domain.entities.CategoriaEvento;
+import com.example.project.domain.entities.StatusEvento;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +16,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EventoResponse {
 
-    private Integer IdCategoriaEvento;
-    private Integer IdEventoStatus;
+    private Integer IdEvento;
+    private CategoriaEvento categoriaEvento;
+    private StatusEvento statusEvento;
     private String Nome;
     private Date DataHoraInicio;
     private Date DataHoraFim;

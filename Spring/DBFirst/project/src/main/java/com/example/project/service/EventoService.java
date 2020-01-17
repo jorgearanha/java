@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.project.domain.entities.Evento;
+import com.example.project.exception.DataCantBeDeletedException;
 import com.example.project.exception.DataNotFoundException;
 import com.example.project.repository.EventoRepository;
 
@@ -20,7 +21,7 @@ public class EventoService {
         this.eventoRepository = eventoRepository;
     }
 
-    public List<Evento> listClient() {
+    public List<Evento> list() {
         return eventoRepository.findAll();
     }
 
@@ -29,10 +30,18 @@ public class EventoService {
         return evento.orElseThrow(() -> new DataNotFoundException("Evento Not found"));
     }
 
-    public Evento createEvento(Evento evento, Integer idCategoria, Integer idStatus) {
-        evento.getStatusEvento().setIdEventoStatus(idStatus);
-        evento.getCategoriaEvento().setIdCategoriaEvento(idCategoria);
+    public Evento createEvento(Evento evento) {
         return eventoRepository.save(evento);
+    }
+
+    public void deleteById(Integer id){
+        findById(id);
+        try {
+            eventoRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new DataCantBeDeletedException("Show 🙏 - Evento com participação não pode ser deletado.");
+        }
+        
     }
 
 }
