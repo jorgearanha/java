@@ -33,6 +33,11 @@ public class ParticipacaoService {
         return participacaoRepository.save(participacao);
     }
 
+    public Participacao putParticipacao(Integer id ,Participacao model) {
+        Participacao participacao = findById(id);
+        return null;
+    }
+
     public void deleteById(Integer id){
         findById(id);
         participacaoRepository.deleteById(id);
