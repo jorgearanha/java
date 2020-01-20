@@ -5,9 +5,7 @@ import java.util.stream.Collectors;
 
 import com.example.project.domain.dto.request.EventoCreateRequest;
 import com.example.project.domain.dto.response.EventoResponse;
-import com.example.project.domain.entities.CategoriaEvento;
 import com.example.project.domain.entities.Evento;
-import com.example.project.domain.entities.StatusEvento;
 import com.example.project.domain.mapper.EventoMapper;
 import com.example.project.service.CategoriaEventoService;
 import com.example.project.service.EventoService;
