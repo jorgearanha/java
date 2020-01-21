@@ -7,12 +7,12 @@ import javax.validation.Valid;
 
 import com.example.project.domain.dto.request.ClientCreateRequest;
 import com.example.project.domain.dto.response.ClientResponse;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import com.example.project.domain.entities.Client;
 import com.example.project.domain.mapper.ClientMapper;
 import com.example.project.service.ClientService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -56,6 +56,13 @@ public class ClientController {
 		Client client = clientService.createClient(mapper.fromDto(model));
 
 		return ResponseEntity.ok(mapper.toDto(client));
+	}
+
+	@GetMapping(value = "/phone")
+	public ResponseEntity<List<ClientResponse>> list(@RequestParam("q") String phone) {
+		return ResponseEntity.ok(clientService.listByPhone(phone).stream() //
+				.map(x -> mapper.toDto(x)) //
+				.collect(Collectors.toList()));
 	}
 
 	@GetMapping(value = "/distinct")

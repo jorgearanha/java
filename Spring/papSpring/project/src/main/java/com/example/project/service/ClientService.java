@@ -28,7 +28,7 @@ public class ClientService {
         Client client = findById(id);
         client.setName(model.getName());
         client.setPhone(model.getPhone());
-        return clientRepository.save(client);
+        return clientRepository.save(client); 
     }
 
     public void deleteClient(Integer id) {
@@ -48,4 +48,8 @@ public class ClientService {
         return clientRepository.listDistinct();
 	}
 
+    public  List<Client> listByPhone(String phone) {
+        return clientRepository.findByPhone(phone);
+    }
+    
 }
