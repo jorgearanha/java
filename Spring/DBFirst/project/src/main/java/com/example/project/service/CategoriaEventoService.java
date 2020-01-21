@@ -20,7 +20,7 @@ public class CategoriaEventoService {
         this.categoriaEventoRepository = categoriaEventoRepository;
     }
 
-    public List<CategoriaEvento> listClient() {
+    public List<CategoriaEvento> list() {
         return categoriaEventoRepository.findAll();
     }
 

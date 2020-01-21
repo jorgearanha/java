@@ -34,7 +34,7 @@ public class CategoriaEventoController {
 	
 	@GetMapping
     public ResponseEntity<List<CategoriaEventoResponse>> list() {
-		return ResponseEntity.ok(categoriaEventoService.listClient().stream() //
+		return ResponseEntity.ok(categoriaEventoService.list().stream() //
 				.map(x -> mapper.toDto(x)) //
 				.collect(Collectors.toList()));
 	}
