@@ -1,7 +1,9 @@
 package com.example.project.service;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -118,7 +120,32 @@ public class ClientServiceTest {
 
     @Test
     public void should_listByPhone() {
-        List<Client> = 
+        List<Client> list = new ArrayList<>();
+        list.add(entity);
+        list.add(entity);
+        when(repositoryMock.findByPhone("999999999")).thenReturn(list);
+
+        List<Client> listByPhone = service.listByPhone("999999999");
+        
+        verify(repositoryMock, times(1)).findByPhone("999999999");
+
+        assertNotNull("Array não deve ser nulo", listByPhone);
+        assertEquals("Array deve ser de tamanho 2", 2, listByPhone.size());
+    }
+
+    @Test
+    public void should_listDistinct() {
+        List<String> list = new ArrayList<>();
+        list.add("teste");
+        list.add("unitario");
+
+        when(repositoryMock.listDistinct()).thenReturn(list);
+
+        List<String> model = service.listDistinct();
+
+        assertNotNull("Array não deve ser nulo", model);
+        assertTrue(model instanceof List<?>);
+        assertTrue(model.get(0) instanceof String);
     }
 
 } 
