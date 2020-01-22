@@ -77,8 +77,8 @@ public class EventoController {
 		return ResponseEntity.ok("ISOLADOS!!!");
 	}
 
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody EventoCreateRequest model) {
-		return ResponseEntity.ok("Gratidão");
-	}
+	// @PutMapping(value = "/{id}")
+	// public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody EventoCreateRequest model) {
+	// 	return ResponseEntity.ok("Gratidão");
+	// }
 }

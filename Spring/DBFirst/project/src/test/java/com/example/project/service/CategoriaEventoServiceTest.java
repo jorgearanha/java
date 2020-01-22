@@ -3,6 +3,8 @@ package com.example.project.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -66,6 +68,8 @@ public class CategoriaEventoServiceTest {
 
         List<CategoriaEvento> categorias = service.list();
 
+        verify(repositoryMock, times(1)).findAll();
+        
         assertTrue("O retorno esperado é uma lista", categorias instanceof List<?>);
         assertTrue("A Lista deve ser de CategoriaEvento", categorias.get(0) instanceof CategoriaEvento);
     }

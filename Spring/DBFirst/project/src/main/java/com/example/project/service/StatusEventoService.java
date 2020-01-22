@@ -20,7 +20,7 @@ public class StatusEventoService {
         this.statusEventoRepository = statusEventoRepository;
     }
 
-    public List<StatusEvento> listClient() {
+    public List<StatusEvento> list() {
         return statusEventoRepository.findAll();
     }
 

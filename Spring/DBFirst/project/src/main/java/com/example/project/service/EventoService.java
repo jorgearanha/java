@@ -44,10 +44,10 @@ public class EventoService {
         
     }
 
-    public Evento putEvento(Integer id ,Evento model) {
-        Evento evento = findById(id);
+    // public Evento putEvento(Integer id ,Evento model) {
+    //     Evento evento = findById(id);
         
-        return null;
-    }
+    //     return null;
+    // }
 
 }

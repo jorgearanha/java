@@ -34,7 +34,7 @@ public class StatusEventoController {
 	
 	@GetMapping
     public ResponseEntity<List<StatusEventoResponse>> list() {
-		return ResponseEntity.ok(statusEventoService.listClient().stream() //
+		return ResponseEntity.ok(statusEventoService.list().stream() //
 				.map(x -> mapper.toDto(x)) //
 				.collect(Collectors.toList()));
 	}
