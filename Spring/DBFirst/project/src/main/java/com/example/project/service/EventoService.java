@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.example.project.domain.entities.Evento;
 import com.example.project.exception.DataCantBeDeletedException;
 import com.example.project.exception.DataNotFoundException;
+import com.example.project.exception.EventoCantBeCreatedException;
 import com.example.project.repository.EventoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class EventoService {
     }
 
     public Evento createEvento(Evento evento) {
+        if (evento.getDataHoraInicio().compareTo(evento.getDataHoraFim()) > 0)
+            throw new EventoCantBeCreatedException("Show 🙏 - dataFim deve ser maior ou igual que dataInicio.");
         return eventoRepository.save(evento);
     }
 

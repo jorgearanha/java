@@ -1,5 +1,7 @@
 package com.example.project.domain.dto.response;
 
+import com.example.project.domain.entities.Evento;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ParticipacaoResponse {
 
     private Integer IdParticipacao;
-    private Integer IdEvento;
+    private Evento evento;
     private String LoginParticipante;
     private Boolean FlagPresente;
     private Integer Nota;

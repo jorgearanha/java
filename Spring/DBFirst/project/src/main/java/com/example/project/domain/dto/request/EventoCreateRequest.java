@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.example.project.domain.validators.MyDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +28,11 @@ public class EventoCreateRequest {
     private String Nome;
 
     @NotNull(message = "Invalid DataHoraInicio")
+    @MyDate
     private Date DataHoraInicio;
 
     @NotNull(message = "Invalid DataHoraFim")
+    @MyDate
     private Date DataHoraFim;
 
     @NotEmpty(message = "Local is required")

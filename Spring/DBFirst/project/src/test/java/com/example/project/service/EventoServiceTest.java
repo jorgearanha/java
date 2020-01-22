@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import com.example.project.domain.entities.Evento;
 import com.example.project.domain.entities.StatusEvento;
 import com.example.project.exception.DataCantBeDeletedException;
 import com.example.project.exception.DataNotFoundException;
+import com.example.project.exception.EventoCantBeCreatedException;
 import com.example.project.repository.EventoRepository;
 
 import org.junit.Rule;
@@ -50,13 +52,21 @@ public class EventoServiceTest {
             .NomeStatus("NomeStatus") //
             .build();
 
+    public Date dayPlusOne() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        return cal.getTime();
+    }
+    
+
     Evento evento = Evento.builder() //
             .IdEvento(1) //
             .categoriaEvento(categoria) //
             .statusEvento(status) //
             .Nome("Nome") //
-            .DataHoraInicio(new Date()) //
-            .DataHoraFim(new Date()) //
+            .DataHoraInicio(dayPlusOne()) //
+            .DataHoraFim(dayPlusOne()) //
             .Local("Local") //
             .Descricao("Descricao") //
             .LimiteVagas(10) //
@@ -81,6 +91,32 @@ public class EventoServiceTest {
         should_findById();
 
         service.deleteById(1);
+    }
+
+    @Test
+    public void should_ThrowEventoCantBeCreatedException() {
+        expected.expect(EventoCantBeCreatedException.class);
+        expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio.");
+
+        Calendar dayMinusOneMilli = Calendar.getInstance();
+
+        dayMinusOneMilli.setTime(dayPlusOne());
+        dayMinusOneMilli.add(Calendar.MILLISECOND, -1);
+
+        Evento teste = Evento.builder() //
+            .IdEvento(1) //
+            .categoriaEvento(categoria) //
+            .statusEvento(status) //
+            .Nome("Nome") //
+            .DataHoraInicio(dayPlusOne()) //
+            .DataHoraFim(dayMinusOneMilli.getTime()) //
+            .Local("Local") //
+            .Descricao("Descricao") //
+            .LimiteVagas(10) //
+            .build();
+
+        service.createEvento(teste);
+
     }
 
     @Test
@@ -121,7 +157,5 @@ public class EventoServiceTest {
         should_findById();
         service.deleteById(1);
     }
-
-
 
 }

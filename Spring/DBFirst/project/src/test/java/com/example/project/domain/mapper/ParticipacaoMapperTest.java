@@ -37,10 +37,9 @@ public class ParticipacaoMapperTest {
             .build();
 
         ParticipacaoResponse dto = mapper.toDto(p);
-        dto.setIdEvento(1);
 
         assertEquals("Valores diferentes encontrados 1", dto.getIdParticipacao(), p.getIdParticipacao());
-        assertEquals("Valores diferentes encontrados 2", dto.getIdEvento(), p.getEvento().getIdEvento());
+        assertEquals("Valores diferentes encontrados 2", dto.getEvento().getIdEvento(), p.getEvento().getIdEvento());
         assertEquals("Valores diferentes encontrados 3", dto.getLoginParticipante(), p.getLoginParticipante());
         assertEquals("Valores diferentes encontrados 4", dto.getFlagPresente(), p.getFlagPresente());
         assertEquals("Valores diferentes encontrados 5", dto.getNota(), p.getNota());
