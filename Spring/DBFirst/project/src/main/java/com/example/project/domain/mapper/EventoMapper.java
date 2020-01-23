@@ -30,4 +30,8 @@ public class EventoMapper {
         return mapper.map(input, Evento.class);
     }
 
+    public Evento fromUDto(EventoUpdateRequest input) {
+        return mapper.map(input, Evento.class);
+    }
+
 }

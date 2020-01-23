@@ -17,7 +17,7 @@ public class EventoCantBeCreatedException extends RuntimeException {
         super(message);
     }
 
-    public EventoCantBeCreatedException(String message, Throwable e) {
-        super(message, e);
-    }
+    // public EventoCantBeCreatedException(String message, Throwable e) {
+    //     super(message, e);
+    // }
 } 

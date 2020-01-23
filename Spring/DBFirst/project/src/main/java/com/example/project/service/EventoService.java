@@ -1,9 +1,12 @@
 package com.example.project.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import com.example.project.domain.entities.Evento;
+import com.example.project.domain.entities.StatusEvento;
 import com.example.project.exception.DataCantBeDeletedException;
 import com.example.project.exception.DataNotFoundException;
 import com.example.project.exception.EventoCantBeCreatedException;
@@ -32,8 +35,9 @@ public class EventoService {
     }
 
     public Evento createEvento(Evento evento) {
-        if (evento.getDataHoraInicio().compareTo(evento.getDataHoraFim()) > 0)
-            throw new EventoCantBeCreatedException("Show 🙏 - dataFim deve ser maior ou igual que dataInicio.");
+        if (evento.getDataHoraInicio().compareTo(evento.getDataHoraFim()) > 0
+            || zeraDia(evento.getDataHoraInicio()).compareTo(zeraDia(evento.getDataHoraFim())) != 0)
+            throw new EventoCantBeCreatedException("Show 🙏 - dataFim deve ser maior ou igual que dataInicio no mesmo dia.");
         return eventoRepository.save(evento);
     }
 
@@ -47,10 +51,36 @@ public class EventoService {
         
     }
 
-    // public Evento putEvento(Integer id ,Evento model) {
-    //     Evento evento = findById(id);
+    public Evento cancelaEvento(Integer id){
+        Evento e = findById(id);
+        e.setStatusEvento(StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+
+        eventoRepository.save(e);
+
+        return e;
+    }
+
+    public Evento putEvento(Integer id ,Evento model) {
+        Evento evento = findById(id);
         
-    //     return null;
-    // }
+        evento.setStatusEvento(model.getStatusEvento());
+        evento.setLocal(model.getLocal());
+        evento.setDescricao(model.getDescricao());
+        evento.setLimiteVagas(model.getLimiteVagas());
+
+        eventoRepository.save(evento);
+        
+        return evento;
+    }
+
+    private Date zeraDia(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
 
 }

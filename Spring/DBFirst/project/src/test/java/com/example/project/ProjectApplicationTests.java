@@ -9,6 +9,7 @@ public class ProjectApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		ProjectApplication.main(new String[] {});
 	}
 
 }

@@ -17,7 +17,7 @@ public class DataCantBeDeletedException extends RuntimeException {
         super(message);
     }
 
-    public DataCantBeDeletedException(String message, Throwable e) {
-        super(message, e);
-    }
+    // public DataCantBeDeletedException(String message, Throwable e) {
+    //     super(message, e);
+    // }
 } 

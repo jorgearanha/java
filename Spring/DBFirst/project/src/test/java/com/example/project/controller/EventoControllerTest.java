@@ -132,5 +132,10 @@ public class EventoControllerTest {
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
+
+    @Test
+    public void should_cancelaEvento() {
+        
+    }
     
 }

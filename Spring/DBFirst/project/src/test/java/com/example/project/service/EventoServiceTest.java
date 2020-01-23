@@ -39,6 +39,9 @@ public class EventoServiceTest {
     @Mock
     EventoRepository repositoryMock;
 
+    @Mock
+    private StatusEventoService serviceStatus;
+
     @InjectMocks
     private EventoService service;
 
@@ -94,9 +97,35 @@ public class EventoServiceTest {
     }
 
     @Test
-    public void should_ThrowEventoCantBeCreatedException() {
+    public void should_ThrowEventoCantBeCreatedException_WhenDifferentDay() {
         expected.expect(EventoCantBeCreatedException.class);
-        expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio.");
+        expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio no mesmo dia.");
+
+        Calendar dayPlusTwo = Calendar.getInstance();
+
+        dayPlusTwo.setTime(dayPlusOne());
+        dayPlusTwo.add(Calendar.DAY_OF_MONTH, 1);
+
+        Evento teste = Evento.builder() //
+            .IdEvento(1) //
+            .categoriaEvento(categoria) //
+            .statusEvento(status) //
+            .Nome("Nome") //
+            .DataHoraInicio(dayPlusOne()) //
+            .DataHoraFim(dayPlusTwo.getTime()) //
+            .Local("Local") //
+            .Descricao("Descricao") //
+            .LimiteVagas(10) //
+            .build();
+
+        service.createEvento(teste);
+
+    }
+
+    @Test
+    public void should_ThrowEventoCantBeCreatedException_WhenFimGreaterThanIni() {
+        expected.expect(EventoCantBeCreatedException.class);
+        expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio no mesmo dia.");
 
         Calendar dayMinusOneMilli = Calendar.getInstance();
 
@@ -156,6 +185,49 @@ public class EventoServiceTest {
     public void should_deleteById() {
         should_findById();
         service.deleteById(1);
+    }
+
+    @Test
+    public void should_PutEvento() {
+        when(serviceStatus.findById(4))
+            .thenReturn(StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+        when(repositoryMock.findById(anyInt()))
+            .thenReturn(Optional.of(evento));
+
+            Evento teste = Evento.builder() //
+                .statusEvento(serviceStatus.findById(4)) //
+                .Local("Local") //
+                .Descricao("Descricao") //
+                .LimiteVagas(10) //
+                .build(); 
+        
+        Evento model = service.putEvento(1, teste);
+
+        assertEquals("Saida diferento do esperado",
+            model, 
+            Evento.builder() //
+                .IdEvento(1) //
+                .categoriaEvento(categoria) //
+                .statusEvento(serviceStatus.findById(4)) //
+                .Nome("Nome") //
+                .DataHoraInicio(evento.getDataHoraInicio()) //
+                .DataHoraFim(evento.getDataHoraFim())//
+                .Local("Local") //
+                .Descricao("Descricao") //
+                .LimiteVagas(10) //
+                .build());
+    }
+
+    @Test
+    public void should_cancelaEvento(){
+        when(repositoryMock.findById(anyInt()))
+            .thenReturn(Optional.of(evento));
+
+        Evento teste = service.cancelaEvento(1);
+
+        assertEquals("Status evento deveria estar como Cancelado",
+            teste.getStatusEvento(), 
+            StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
     }
 
 }

@@ -1,9 +1,6 @@
 package com.example.project.domain.dto.request;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,11 +15,11 @@ public class EventoUpdateRequest {
 
     private Integer IdEventoStatus;
 
-    @NotNull(message = "Invalid DataHoraInicio")
-    private Date DataHoraInicio;
+    @NotEmpty(message = "Local is required")
+    private String Local;
 
-    @NotNull(message = "Invalid DataHoraFim")
-    private Date DataHoraFim;
+    @NotEmpty(message = "Descricao is required")
+    private String Descricao;
 
     @NotEmpty(message = "LimiteVagas is required")
     private Integer LimiteVagas;
