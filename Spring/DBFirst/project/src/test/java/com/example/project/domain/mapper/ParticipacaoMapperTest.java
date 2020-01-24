@@ -52,9 +52,6 @@ public class ParticipacaoMapperTest {
             .builder()
             .IdEvento(1)
             .LoginParticipante("LoginParticipante")
-            .FlagPresente(true)
-            .Nota(10)
-            .Comentario("Comentario")
             .build();
 
         Participacao p = mapper.fromDto(dto);
@@ -62,9 +59,6 @@ public class ParticipacaoMapperTest {
 
         assertEquals("Valores diferentes encontrados 1", dto.getIdEvento(), p.getEvento().getIdEvento());
         assertEquals("Valores diferentes encontrados 2", dto.getLoginParticipante(), p.getLoginParticipante());
-        assertEquals("Valores diferentes encontrados 3", dto.getFlagPresente(), p.getFlagPresente());
-        assertEquals("Valores diferentes encontrados 4", dto.getNota(), p.getNota());
-        assertEquals("Valores diferentes encontrados 5", dto.getComentario(), p.getComentario());
     }
 
 }

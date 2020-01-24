@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
 public class DataCantBeDeletedException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6791812947427807098L;
 
     public DataCantBeDeletedException(String message) {
         super(message);

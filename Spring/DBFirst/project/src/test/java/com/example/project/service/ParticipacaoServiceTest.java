@@ -64,8 +64,8 @@ public class ParticipacaoServiceTest {
     Participacao participacao = Participacao.builder() //
             .IdParticipacao(1) //
             .evento(evento) //
-            .LoginParticipante("LoginParticipante") // 
-            .FlagPresente(true) //
+            .LoginParticipante("LoginParticipante") //
+            .FlagPresente(false) //
             .Nota(10) //
             .Comentario("Comentario") //
             .build();
@@ -84,7 +84,7 @@ public class ParticipacaoServiceTest {
 
         Participacao model = service.findById(anyInt());
 
-        assertEquals("Saida esperada não ocorreu" , participacao, model);
+        assertEquals("Saida esperada não ocorreu", participacao, model);
     }
 
     @Test
@@ -112,11 +112,48 @@ public class ParticipacaoServiceTest {
     }
 
     @Test
+    public void should_putFlag() {
+
+        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(participacao));
+
+        Participacao teste = service.putFlag(1);
+
+        assertEquals(teste, Participacao.builder() //
+                .IdParticipacao(1) //
+                .evento(evento) //
+                .LoginParticipante("LoginParticipante") //
+                .FlagPresente(true) //
+                .Nota(10) //
+                .Comentario("Comentario") //
+                .build());
+    }
+
+    @Test
+    public void should_putFeedback() {
+
+        Participacao model = Participacao.builder() //
+                .Comentario("Nunca fui, muito bom") // 
+                .Nota(1)
+                .build();
+
+        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(participacao));
+
+        Participacao teste = service.putFeedback(1, model);
+
+        assertEquals(teste, Participacao.builder() //
+                .IdParticipacao(1) //
+                .evento(evento) //
+                .LoginParticipante("LoginParticipante") //
+                .FlagPresente(false) //
+                .Comentario("Nunca fui, muito bom") // 
+                .Nota(1)
+                .build());
+    }
+
+    @Test
     public void should_deleteById() {
         should_findById();
         service.deleteById(1);
     }
-
-
 
 }

@@ -12,12 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ParticipacaoCreateRequest {
+public class ParticipacaoUpdateFlagRequest {
 
     @NotNull
-    private Integer IdEvento;
-
-    @NotEmpty
-    private String LoginParticipante;
+    private Boolean FlagPresente;
 
 }

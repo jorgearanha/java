@@ -86,9 +86,6 @@ public class ParticipacaoControllerTest {
     ParticipacaoCreateRequest dto = ParticipacaoCreateRequest.builder() //
         .IdEvento(evento.getIdEvento()) //
         .LoginParticipante("LoginParticipante") // 
-        .FlagPresente(true) //
-        .Nota(10) //
-        .Comentario("Comentario") //
         .build();
 
     @Test

@@ -12,12 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ParticipacaoCreateRequest {
+public class ParticipacaoUpdateFeedbackRequest {
 
-    @NotNull
-    private Integer IdEvento;
+    private Integer Nota;
 
-    @NotEmpty
-    private String LoginParticipante;
+    private String Comentario;
 
 }
