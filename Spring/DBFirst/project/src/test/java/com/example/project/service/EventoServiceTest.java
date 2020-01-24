@@ -16,11 +16,14 @@ import java.util.Optional;
 
 import com.example.project.domain.entities.CategoriaEvento;
 import com.example.project.domain.entities.Evento;
+import com.example.project.domain.entities.Participacao;
 import com.example.project.domain.entities.StatusEvento;
 import com.example.project.exception.DataCantBeDeletedException;
 import com.example.project.exception.DataNotFoundException;
+import com.example.project.exception.EventoCantBeCanceledException;
 import com.example.project.exception.EventoCantBeCreatedException;
 import com.example.project.repository.EventoRepository;
+import com.example.project.repository.ParticipacaoRepository;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +41,9 @@ public class EventoServiceTest {
 
     @Mock
     EventoRepository repositoryMock;
+
+    @Mock
+    ParticipacaoRepository repositoryParticipacao;
 
     @Mock
     private StatusEventoService serviceStatus;
@@ -61,7 +67,6 @@ public class EventoServiceTest {
 
         return cal.getTime();
     }
-    
 
     Evento evento = Evento.builder() //
             .IdEvento(1) //
@@ -75,6 +80,15 @@ public class EventoServiceTest {
             .LimiteVagas(10) //
             .build();
 
+    Participacao participacao = Participacao.builder() //
+            .IdParticipacao(1) //
+            .evento(evento) //
+            .LoginParticipante("LoginParticipante") //
+            .FlagPresente(false) //
+            .Nota(10) //
+            .Comentario("Comentario") //
+            .build();
+
     @Test
     public void should_ThrowDataNotFoundException_whenNotFound() {
         expected.expect(DataNotFoundException.class);
@@ -85,12 +99,11 @@ public class EventoServiceTest {
 
     @Test
     public void should_ThrowDataCantBeDeletedException_whenNotFound() {
-        doThrow(new DataCantBeDeletedException("Show 🙏"))
-            .when(repositoryMock).deleteById(anyInt());
+        doThrow(new DataCantBeDeletedException("Show 🙏")).when(repositoryMock).deleteById(anyInt());
 
         expected.expect(DataCantBeDeletedException.class);
         expected.expectMessage("Show 🙏 - Evento com participação não pode ser deletado.");
-        
+
         should_findById();
 
         service.deleteById(1);
@@ -107,16 +120,16 @@ public class EventoServiceTest {
         dayPlusTwo.add(Calendar.DAY_OF_MONTH, 1);
 
         Evento teste = Evento.builder() //
-            .IdEvento(1) //
-            .categoriaEvento(categoria) //
-            .statusEvento(status) //
-            .Nome("Nome") //
-            .DataHoraInicio(dayPlusOne()) //
-            .DataHoraFim(dayPlusTwo.getTime()) //
-            .Local("Local") //
-            .Descricao("Descricao") //
-            .LimiteVagas(10) //
-            .build();
+                .IdEvento(1) //
+                .categoriaEvento(categoria) //
+                .statusEvento(status) //
+                .Nome("Nome") //
+                .DataHoraInicio(dayPlusOne()) //
+                .DataHoraFim(dayPlusTwo.getTime()) //
+                .Local("Local") //
+                .Descricao("Descricao") //
+                .LimiteVagas(10) //
+                .build();
 
         service.createEvento(teste);
 
@@ -133,19 +146,37 @@ public class EventoServiceTest {
         dayMinusOneMilli.add(Calendar.MILLISECOND, -1);
 
         Evento teste = Evento.builder() //
-            .IdEvento(1) //
-            .categoriaEvento(categoria) //
-            .statusEvento(status) //
-            .Nome("Nome") //
-            .DataHoraInicio(dayPlusOne()) //
-            .DataHoraFim(dayMinusOneMilli.getTime()) //
-            .Local("Local") //
-            .Descricao("Descricao") //
-            .LimiteVagas(10) //
-            .build();
+                .IdEvento(1) //
+                .categoriaEvento(categoria) //
+                .statusEvento(status) //
+                .Nome("Nome") //
+                .DataHoraInicio(dayPlusOne()) //
+                .DataHoraFim(dayMinusOneMilli.getTime()) //
+                .Local("Local") //
+                .Descricao("Descricao") //
+                .LimiteVagas(10) //
+                .build();
 
         service.createEvento(teste);
 
+    }
+
+    @Test
+    public void should_ThrowDataCantBeCanceledException_whenExistsParticipacao() {
+        expected.expect(EventoCantBeCanceledException.class);
+        expected.expectMessage("Show 🙏 - Evento com participacao não pode ser cancelado.");
+
+        
+        List<Participacao> participacoes = new ArrayList<>();
+        participacoes.add(participacao);
+
+        when(repositoryMock.findById(anyInt()))//
+                .thenReturn(Optional.of(evento));
+        when(repositoryParticipacao.findByEvento(evento)) //
+                .thenReturn(participacoes);
+
+        service.cancelaEvento(anyInt());
+        
     }
 
     @Test
@@ -154,7 +185,7 @@ public class EventoServiceTest {
 
         Evento model = service.findById(anyInt());
 
-        assertEquals("Saida esperada não ocorreu" , evento, model);
+        assertEquals("Saida esperada não ocorreu", evento, model);
     }
 
     @Test
@@ -190,22 +221,19 @@ public class EventoServiceTest {
     @Test
     public void should_PutEvento() {
         when(serviceStatus.findById(4))
-            .thenReturn(StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
-        when(repositoryMock.findById(anyInt()))
-            .thenReturn(Optional.of(evento));
+                .thenReturn(StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
 
-            Evento teste = Evento.builder() //
+        Evento teste = Evento.builder() //
                 .statusEvento(serviceStatus.findById(4)) //
                 .Local("Local") //
                 .Descricao("Descricao") //
                 .LimiteVagas(10) //
-                .build(); 
-        
+                .build();
+
         Evento model = service.putEvento(1, teste);
 
-        assertEquals("Saida diferento do esperado",
-            model, 
-            Evento.builder() //
+        assertEquals("Saida diferento do esperado", model, Evento.builder() //
                 .IdEvento(1) //
                 .categoriaEvento(categoria) //
                 .statusEvento(serviceStatus.findById(4)) //
@@ -219,15 +247,16 @@ public class EventoServiceTest {
     }
 
     @Test
-    public void should_cancelaEvento(){
-        when(repositoryMock.findById(anyInt()))
-            .thenReturn(Optional.of(evento));
+    public void should_cancelaEvento() {
+        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
+        when(repositoryParticipacao.findByEvento(evento)).thenReturn(new ArrayList<Participacao>());
 
         Evento teste = service.cancelaEvento(1);
 
-        assertEquals("Status evento deveria estar como Cancelado",
-            teste.getStatusEvento(), 
-            StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+        assertEquals("Status evento deveria estar como Cancelado", teste.getStatusEvento(),
+                StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
     }
+
+    
 
 }
