@@ -30,9 +30,11 @@ public class EventoMapperTest {
 
     @Test
     public void should_Convert_EventoToEventoResponse() {
-        Evento e = Evento.builder().IdEvento(1).categoriaEvento(CategoriaEvento.builder().IdCategoriaEvento(1).build())
-                .statusEvento(StatusEvento.builder().IdEventoStatus(1).build()).Nome("Nome").DataHoraInicio(new Date())
-                .DataHoraFim(new Date()).Local("Local").Descricao("Descricao").LimiteVagas(10).build();
+        Evento e = Evento.builder().idEvento(1)
+                                .categoriaEvento(CategoriaEvento.builder().IdCategoriaEvento(1).build())
+                .statusEvento(StatusEvento.builder().IdEventoStatus(1).build()).nome("Nome")
+                                .dataHoraInicio(new Date())
+                .dataHoraFim(new Date()).local("Local").descricao("Descricao").limiteVagas(10).build();
 
         EventoResponse dto = mapper.toDto(e);
         dto.setIdEvento(1);

@@ -29,12 +29,8 @@ public class ParticipacaoMapperTest {
         Participacao p = Participacao
             .builder()
             .IdParticipacao(1)
-            .evento(Evento.builder().IdEvento(1).build())
-            .LoginParticipante("LoginParticipante")
-            .FlagPresente(true)
-            .Nota(10)
-            .Comentario("Comentario")
-            .build();
+            .evento(Evento.builder().idEvento(1).build()).LoginParticipante("LoginParticipante").FlagPresente(true)
+                .Nota(10).Comentario("Comentario").build();
 
         ParticipacaoResponse dto = mapper.toDto(p);
 
@@ -48,14 +44,11 @@ public class ParticipacaoMapperTest {
 
     @Test
     public void should_Convert_ParticipacaoResponseToParticipacao() {
-        ParticipacaoCreateRequest dto = ParticipacaoCreateRequest
-            .builder()
-            .IdEvento(1)
-            .LoginParticipante("LoginParticipante")
-            .build();
+        ParticipacaoCreateRequest dto = ParticipacaoCreateRequest.builder().IdEvento(1)
+                .LoginParticipante("LoginParticipante").build();
 
         Participacao p = mapper.fromDto(dto);
-        p.setEvento(Evento.builder().IdEvento(1).build());
+        p.setEvento(Evento.builder().idEvento(1).build());
 
         assertEquals("Valores diferentes encontrados 1", dto.getIdEvento(), p.getEvento().getIdEvento());
         assertEquals("Valores diferentes encontrados 2", dto.getLoginParticipante(), p.getLoginParticipante());

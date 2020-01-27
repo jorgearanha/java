@@ -17,6 +17,7 @@ import com.example.project.domain.entities.Evento;
 import com.example.project.domain.entities.Participacao;
 import com.example.project.domain.entities.StatusEvento;
 import com.example.project.exception.DataNotFoundException;
+import com.example.project.exception.ParticipacaoCantBeCreatedException;
 import com.example.project.repository.ParticipacaoRepository;
 
 import org.junit.Rule;
@@ -32,6 +33,9 @@ public class ParticipacaoServiceTest {
 
     @Rule
     public ExpectedException expected = ExpectedException.none();
+
+    @Mock
+    EventoService eventoService;
 
     @Mock
     ParticipacaoRepository repositoryMock;
@@ -50,15 +54,15 @@ public class ParticipacaoServiceTest {
             .build();
 
     Evento evento = Evento.builder() //
-            .IdEvento(1) //
+            .idEvento(2) //
             .categoriaEvento(categoria) //
             .statusEvento(status) //
-            .Nome("Nome") //
-            .DataHoraInicio(new Date()) //
-            .DataHoraFim(new Date()) //
-            .Local("Local") //
-            .Descricao("Descricao") //
-            .LimiteVagas(10) //
+            .nome("Nome") //
+            .dataHoraInicio(new Date()) //
+            .dataHoraFim(new Date()) //
+            .local("Local") //
+            .descricao("Descricao") //
+            .limiteVagas(10) //
             .build();
 
     Participacao participacao = Participacao.builder() //
@@ -76,6 +80,49 @@ public class ParticipacaoServiceTest {
         expected.expectMessage("Participacao Not found");
 
         service.findById(1);
+    }
+
+    @Test
+    public void should_ParticipacaoCantBeCreatedException_whenIsClosed() {
+        expected.expect(ParticipacaoCantBeCreatedException.class);
+        expected.expectMessage("Evento is full or is closed");
+
+        Evento teste = Evento.builder() //
+                .idEvento(2) //
+                .categoriaEvento(categoria) //
+                .statusEvento(StatusEvento.builder().IdEventoStatus(2).build()) //
+                .nome("Nome") //
+                .dataHoraInicio(new Date()) //
+                .dataHoraFim(new Date()) //
+                .local("Local") //
+                .descricao("Descricao") //
+                .limiteVagas(10) //
+                .build();
+
+        Participacao participacao = Participacao.builder() //
+                .IdParticipacao(1) //
+                .evento(evento) //
+                .LoginParticipante("LoginParticipante") //
+                .FlagPresente(false) //
+                .Nota(10) //
+                .Comentario("Comentario") //
+                .build();
+
+        when(eventoService.findById(anyInt())).thenReturn(teste);
+        // when(repositoryMock.countByEvento(evento)).thenReturn(1);
+
+        service.createParticipacao(participacao);
+    }
+
+    @Test
+    public void should_ParticipacaoCantBeCreatedException_whenIsFull() {
+        expected.expect(ParticipacaoCantBeCreatedException.class);
+        expected.expectMessage("Evento is full or is closed");
+
+        when(eventoService.findById(anyInt())).thenReturn(evento);
+        when(repositoryMock.countByEvento(evento)).thenReturn(10);
+
+        service.createParticipacao(participacao);
     }
 
     @Test
@@ -105,6 +152,8 @@ public class ParticipacaoServiceTest {
     @Test
     public void should_createParticipacao() {
         when(repositoryMock.save(participacao)).thenReturn(participacao);
+        when(eventoService.findById(anyInt())).thenReturn(evento);
+        when(repositoryMock.countByEvento(evento)).thenReturn(0);
 
         Participacao participacaoModel = service.createParticipacao(participacao);
 
@@ -132,9 +181,8 @@ public class ParticipacaoServiceTest {
     public void should_putFeedback() {
 
         Participacao model = Participacao.builder() //
-                .Comentario("Nunca fui, muito bom") // 
-                .Nota(1)
-                .build();
+                .Comentario("Nunca fui, muito bom") //
+                .Nota(1).build();
 
         when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(participacao));
 
@@ -145,9 +193,8 @@ public class ParticipacaoServiceTest {
                 .evento(evento) //
                 .LoginParticipante("LoginParticipante") //
                 .FlagPresente(false) //
-                .Comentario("Nunca fui, muito bom") // 
-                .Nota(1)
-                .build());
+                .Comentario("Nunca fui, muito bom") //
+                .Nota(1).build());
     }
 
     @Test

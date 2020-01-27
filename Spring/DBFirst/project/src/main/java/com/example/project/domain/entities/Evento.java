@@ -23,8 +23,9 @@ import lombok.NoArgsConstructor;
 public class Evento {
 
     @Id
+    @Column(name = "IdEvento")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer IdEvento;
+    private Integer idEvento;
 
     @ManyToOne
     @JoinColumn(name = "IdCategoriaEvento", nullable = false)
@@ -34,22 +35,22 @@ public class Evento {
     @JoinColumn(name = "IdEventoStatus", nullable = false)
     private  StatusEvento statusEvento;
 
-    @Column(nullable = false, length = 250)
-    private String Nome;
+    @Column(name = "Nome", nullable = false, length = 250)
+    private String nome;
 
-    @Column(nullable = false)
-    private Date DataHoraInicio;
+    @Column(name = "DataHoraInicio", nullable = false)
+    private Date dataHoraInicio;
 
-    @Column(nullable = false)
-    private Date DataHoraFim;
+    @Column(name = "DataHoraFim", nullable = false)
+    private Date dataHoraFim;
 
-    @Column(nullable = false, length = 250)
-    private String Local;
+    @Column(name = "Local", nullable = false, length = 250)
+    private String local;
 
-    @Column(nullable = false, length = 1000)
-    private String Descricao;
+    @Column(name = "Descricao", nullable = false, length = 1000)
+    private String descricao;
 
-    @Column(nullable = false)
-    private Integer LimiteVagas;
+    @Column(name = "LimiteVagas", nullable = false)
+    private Integer limiteVagas;
 
 }

@@ -2,11 +2,18 @@ package com.example.project.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import static com.example.project.util.MyDateUtil.dayPlusOne;
+import static com.example.project.util.MyDateUtil.zeraDia;
+import static com.example.project.util.MyDateUtil.fimDia;
+import static com.example.project.util.MyDateUtil.maiorOuIgual;
+import static com.example.project.util.MyDateUtil.menorOuIgual;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,227 +43,318 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class EventoServiceTest {
 
-    @Rule
-    public ExpectedException expected = ExpectedException.none();
+        @Rule
+        public ExpectedException expected = ExpectedException.none();
 
-    @Mock
-    EventoRepository repositoryMock;
+        @Mock
+        EventoRepository repositoryMock;
 
-    @Mock
-    ParticipacaoRepository repositoryParticipacao;
+        @Mock
+        ParticipacaoRepository repositoryParticipacao;
 
-    @Mock
-    private StatusEventoService serviceStatus;
+        @Mock
+        private StatusEventoService serviceStatus;
 
-    @InjectMocks
-    private EventoService service;
+        @InjectMocks
+        private EventoService service;
 
-    CategoriaEvento categoria = CategoriaEvento.builder() //
-            .IdCategoriaEvento(1) //
-            .NomeCategoria("NomeCategoria") //
-            .build();
+        CategoriaEvento categoria = CategoriaEvento.builder() //
+                        .IdCategoriaEvento(1) //
+                        .NomeCategoria("NomeCategoria") //
+                        .build();
 
-    StatusEvento status = StatusEvento.builder() //
-            .IdEventoStatus(1) //
-            .NomeStatus("NomeStatus") //
-            .build();
+        StatusEvento status = StatusEvento.builder() //
+                        .IdEventoStatus(1) //
+                        .NomeStatus("NomeStatus") //
+                        .build();
 
-    public Date dayPlusOne() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 1);
+        Evento evento = Evento.builder() //
+                        .idEvento(1) //
+                        .categoriaEvento(categoria) //
+                        .statusEvento(status) //
+                        .nome("Nome") //
+                        .dataHoraInicio(dayPlusOne()) //
+                        .dataHoraFim(dayPlusOne()) //
+                        .local("Local") //
+                        .descricao("Descricao") //
+                        .limiteVagas(10) //
+                        .build();
 
-        return cal.getTime();
-    }
+        Participacao participacao = Participacao.builder() //
+                        .IdParticipacao(1) //
+                        .evento(evento) //
+                        .LoginParticipante("LoginParticipante") //
+                        .FlagPresente(false) //
+                        .Nota(10) //
+                        .Comentario("Comentario") //
+                        .build();
 
-    Evento evento = Evento.builder() //
-            .IdEvento(1) //
-            .categoriaEvento(categoria) //
-            .statusEvento(status) //
-            .Nome("Nome") //
-            .DataHoraInicio(dayPlusOne()) //
-            .DataHoraFim(dayPlusOne()) //
-            .Local("Local") //
-            .Descricao("Descricao") //
-            .LimiteVagas(10) //
-            .build();
+        @Test
+        public void should_ThrowDataNotFoundException_whenNotFound() {
+                expected.expect(DataNotFoundException.class);
+                expected.expectMessage("Evento Not found");
 
-    Participacao participacao = Participacao.builder() //
-            .IdParticipacao(1) //
-            .evento(evento) //
-            .LoginParticipante("LoginParticipante") //
-            .FlagPresente(false) //
-            .Nota(10) //
-            .Comentario("Comentario") //
-            .build();
+                service.findById(1);
+        }
 
-    @Test
-    public void should_ThrowDataNotFoundException_whenNotFound() {
-        expected.expect(DataNotFoundException.class);
-        expected.expectMessage("Evento Not found");
+        @Test
+        public void should_ThrowDataCantBeDeletedException_whenNotFound() {
+                doThrow(new DataCantBeDeletedException("Show 🙏")).when(repositoryMock).deleteById(anyInt());
 
-        service.findById(1);
-    }
+                expected.expect(DataCantBeDeletedException.class);
+                expected.expectMessage("Show 🙏 - Evento com participação não pode ser deletado.");
 
-    @Test
-    public void should_ThrowDataCantBeDeletedException_whenNotFound() {
-        doThrow(new DataCantBeDeletedException("Show 🙏")).when(repositoryMock).deleteById(anyInt());
+                should_findById();
 
-        expected.expect(DataCantBeDeletedException.class);
-        expected.expectMessage("Show 🙏 - Evento com participação não pode ser deletado.");
+                service.deleteById(1);
+        }
 
-        should_findById();
+        @Test
+        public void should_ThrowEventoCantBeCreatedException_WhenDifferentDay() {
+                expected.expect(EventoCantBeCreatedException.class);
+                expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio no mesmo dia.");
 
-        service.deleteById(1);
-    }
+                Calendar dayPlusTwo = Calendar.getInstance();
 
-    @Test
-    public void should_ThrowEventoCantBeCreatedException_WhenDifferentDay() {
-        expected.expect(EventoCantBeCreatedException.class);
-        expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio no mesmo dia.");
+                dayPlusTwo.setTime(dayPlusOne());
+                dayPlusTwo.add(Calendar.DAY_OF_MONTH, 1);
 
-        Calendar dayPlusTwo = Calendar.getInstance();
+                Evento teste = Evento.builder() //
+                                .idEvento(1) //
+                                .categoriaEvento(categoria) //
+                                .statusEvento(status) //
+                                .nome("Nome") //
+                                .dataHoraInicio(dayPlusOne()) //
+                                .dataHoraFim(dayPlusTwo.getTime()) //
+                                .local("Local") //
+                                .descricao("Descricao") //
+                                .limiteVagas(10) //
+                                .build();
 
-        dayPlusTwo.setTime(dayPlusOne());
-        dayPlusTwo.add(Calendar.DAY_OF_MONTH, 1);
+                service.createEvento(teste);
 
-        Evento teste = Evento.builder() //
-                .IdEvento(1) //
-                .categoriaEvento(categoria) //
-                .statusEvento(status) //
-                .Nome("Nome") //
-                .DataHoraInicio(dayPlusOne()) //
-                .DataHoraFim(dayPlusTwo.getTime()) //
-                .Local("Local") //
-                .Descricao("Descricao") //
-                .LimiteVagas(10) //
-                .build();
+        }
 
-        service.createEvento(teste);
+        @Test
+        public void should_ThrowEventoCantBeCreatedException_WhenFimGreaterThanIni() {
+                expected.expect(EventoCantBeCreatedException.class);
+                expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio no mesmo dia.");
 
-    }
+                Calendar dayMinusOneMilli = Calendar.getInstance();
 
-    @Test
-    public void should_ThrowEventoCantBeCreatedException_WhenFimGreaterThanIni() {
-        expected.expect(EventoCantBeCreatedException.class);
-        expected.expectMessage("Show 🙏 - dataFim deve ser maior ou igual que dataInicio no mesmo dia.");
+                dayMinusOneMilli.setTime(dayPlusOne());
+                dayMinusOneMilli.add(Calendar.MILLISECOND, -1);
 
-        Calendar dayMinusOneMilli = Calendar.getInstance();
+                Evento teste = Evento.builder() //
+                                .idEvento(1) //
+                                .categoriaEvento(categoria) //
+                                .statusEvento(status) //
+                                .nome("Nome") //
+                                .dataHoraInicio(dayPlusOne()) //
+                                .dataHoraFim(dayMinusOneMilli.getTime()) //
+                                .local("Local") //
+                                .descricao("Descricao") //
+                                .limiteVagas(10) //
+                                .build();
 
-        dayMinusOneMilli.setTime(dayPlusOne());
-        dayMinusOneMilli.add(Calendar.MILLISECOND, -1);
+                service.createEvento(teste);
 
-        Evento teste = Evento.builder() //
-                .IdEvento(1) //
-                .categoriaEvento(categoria) //
-                .statusEvento(status) //
-                .Nome("Nome") //
-                .DataHoraInicio(dayPlusOne()) //
-                .DataHoraFim(dayMinusOneMilli.getTime()) //
-                .Local("Local") //
-                .Descricao("Descricao") //
-                .LimiteVagas(10) //
-                .build();
+        }
 
-        service.createEvento(teste);
+        @Test
+        public void should_ThrowDataCantBeCanceledException_whenExistsParticipacao() {
+                expected.expect(EventoCantBeCanceledException.class);
+                expected.expectMessage("Show 🙏 - Evento com participacao não pode ser cancelado.");
 
-    }
+                List<Participacao> participacoes = new ArrayList<>();
+                participacoes.add(participacao);
 
-    @Test
-    public void should_ThrowDataCantBeCanceledException_whenExistsParticipacao() {
-        expected.expect(EventoCantBeCanceledException.class);
-        expected.expectMessage("Show 🙏 - Evento com participacao não pode ser cancelado.");
+                when(repositoryMock.findById(anyInt()))//
+                                .thenReturn(Optional.of(evento));
+                when(repositoryParticipacao.findByEvento(evento)) //
+                                .thenReturn(participacoes);
 
-        
-        List<Participacao> participacoes = new ArrayList<>();
-        participacoes.add(participacao);
+                service.cancelaEvento(anyInt());
 
-        when(repositoryMock.findById(anyInt()))//
-                .thenReturn(Optional.of(evento));
-        when(repositoryParticipacao.findByEvento(evento)) //
-                .thenReturn(participacoes);
+        }
 
-        service.cancelaEvento(anyInt());
-        
-    }
+        @Test
+        public void should_ThrowDataCantBeCanceledException_whenEventIsToday() {
+                expected.expect(EventoCantBeCanceledException.class);
+                expected.expectMessage("Show 🙏 - Eventos de hoje, ou passados, não podem ser cancelados.");
 
-    @Test
-    public void should_findById() {
-        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
+                Evento teste = Evento.builder() //
+                                .idEvento(1) //
+                                .categoriaEvento(categoria) //
+                                .statusEvento(status) //
+                                .nome("Nome") //
+                                .dataHoraInicio(Calendar.getInstance().getTime())//
+                                .dataHoraFim(Calendar.getInstance().getTime()) //
+                                .local("Local") //
+                                .descricao("Descricao") //
+                                .limiteVagas(10) //
+                                .build();
 
-        Evento model = service.findById(anyInt());
+                when(repositoryMock.findById(anyInt()))//
+                                .thenReturn(Optional.of(teste));
+                when(repositoryParticipacao.findByEvento(teste)) //
+                                .thenReturn(new ArrayList<>());
 
-        assertEquals("Saida esperada não ocorreu", evento, model);
-    }
+                service.cancelaEvento(anyInt());
 
-    @Test
-    public void should_listClient() {
-        List<Evento> list = new ArrayList<>();
-        list.add(evento);
-        list.add(evento);
-        when(repositoryMock.findAll()).thenReturn(list);
+        }
 
-        List<Evento> listModel = service.list();
+        @Test
+        public void should_ThrowDataCantBeCanceledException_whenDatePassed() {
+                expected.expect(EventoCantBeCanceledException.class);
+                expected.expectMessage("Show 🙏 - Eventos de hoje, ou passados, não podem ser cancelados.");
 
-        verify(repositoryMock, times(1)).findAll();
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DAY_OF_MONTH, -1);
 
-        assertTrue("O retorno deve ser uma lista", listModel instanceof List<?>);
-        assertTrue("A lista de retorno deve ser de StatusEvento", listModel.get(0) instanceof Evento);
-    }
+                Evento teste = Evento.builder() //
+                                .idEvento(1) //
+                                .categoriaEvento(categoria) //
+                                .statusEvento(status) //
+                                .nome("Nome") //
+                                .dataHoraInicio(cal.getTime()) //
+                                .dataHoraFim(cal.getTime()) //
+                                .local("Local") //
+                                .descricao("Descricao") //
+                                .limiteVagas(10) //
+                                .build();
 
-    @Test
-    public void should_createEvento() {
-        when(repositoryMock.save(evento)).thenReturn(evento);
+                when(repositoryMock.findById(anyInt()))//
+                                .thenReturn(Optional.of(teste));
+                when(repositoryParticipacao.findByEvento(teste)) //
+                                .thenReturn(new ArrayList<>());
 
-        Evento eventoModel = service.createEvento(evento);
+                service.cancelaEvento(anyInt());
 
-        assertEquals("Saida esperada não ocorreu", eventoModel, evento);
-    }
+        }
 
-    @Test
-    public void should_deleteById() {
-        should_findById();
-        service.deleteById(1);
-    }
+        @Test
+        public void should_findById() {
+                when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
 
-    @Test
-    public void should_PutEvento() {
-        when(serviceStatus.findById(4))
-                .thenReturn(StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
-        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
+                Evento model = service.findById(anyInt());
 
-        Evento teste = Evento.builder() //
-                .statusEvento(serviceStatus.findById(4)) //
-                .Local("Local") //
-                .Descricao("Descricao") //
-                .LimiteVagas(10) //
-                .build();
+                assertEquals("Saida esperada não ocorreu", evento, model);
+        }
 
-        Evento model = service.putEvento(1, teste);
+        @Test
+        public void should_list() {
+                List<Evento> list = new ArrayList<>();
+                list.add(evento);
+                list.add(evento);
+                when(repositoryMock.findAll()).thenReturn(list);
 
-        assertEquals("Saida diferento do esperado", model, Evento.builder() //
-                .IdEvento(1) //
-                .categoriaEvento(categoria) //
-                .statusEvento(serviceStatus.findById(4)) //
-                .Nome("Nome") //
-                .DataHoraInicio(evento.getDataHoraInicio()) //
-                .DataHoraFim(evento.getDataHoraFim())//
-                .Local("Local") //
-                .Descricao("Descricao") //
-                .LimiteVagas(10) //
-                .build());
-    }
+                List<Evento> listModel = service.list();
 
-    @Test
-    public void should_cancelaEvento() {
-        when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
-        when(repositoryParticipacao.findByEvento(evento)).thenReturn(new ArrayList<Participacao>());
+                verify(repositoryMock, times(1)).findAll();
 
-        Evento teste = service.cancelaEvento(1);
+                assertTrue("O retorno deve ser uma lista", listModel instanceof List<?>);
+                assertTrue("A lista de retorno deve ser de StatusEvento", listModel.get(0) instanceof Evento);
+        }
 
-        assertEquals("Status evento deveria estar como Cancelado", teste.getStatusEvento(),
-                StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
-    }
+        @Test
+        public void should_listStatusAberto() {
+                List<Evento> list = new ArrayList<>();
+                list.add(evento);
+                list.add(evento);
 
-    
+                when(repositoryMock.findByStatusEvento(any())).thenReturn(list);
+
+                List<Evento> listModel = service.listStatusAberto();
+
+                verify(repositoryMock, times(1)).findByStatusEvento(any());
+
+                assertTrue("O retorno deve ser uma lista!", listModel instanceof List<?>);
+                assertTrue("A lista de retorno deve ser de StatusEvento!", listModel.get(0) instanceof Evento);
+
+                for (Evento evento : listModel) {
+                        assertTrue("O evento deve estar aberto para inscrição!",
+                                        evento.getStatusEvento().getIdEventoStatus() == 1);
+                }
+
+        }
+
+        @Test
+        public void should_listByDate() {
+                List<Evento> list = new ArrayList<>();
+                list.add(evento);
+                list.add(evento);
+
+                when(repositoryMock.findByDataHoraInicioBetween(any(), any())).thenReturn(list);
+
+                List<Evento> listModel = service.listByDate(dayPlusOne());
+
+                verify(repositoryMock, times(1)).findByDataHoraInicioBetween(zeraDia(dayPlusOne()),
+                                fimDia(dayPlusOne()));
+
+                assertTrue("O retorno deve ser uma lista!", listModel instanceof List<?>);
+                assertTrue("A lista de retorno deve ser de StatusEvento!", listModel.get(0) instanceof Evento);
+
+                for (Evento evento : listModel) {
+                        assertTrue("O evento deve estar no intervalo do dia", //
+                                        maiorOuIgual(evento.getDataHoraInicio(), zeraDia(dayPlusOne())) //
+                                                        && menorOuIgual(evento.getDataHoraInicio(),
+                                                                        fimDia(dayPlusOne())));
+                }
+        }
+
+        @Test
+        public void should_createEvento() {
+                when(repositoryMock.save(evento)).thenReturn(evento);
+
+                Evento eventoModel = service.createEvento(evento);
+
+                assertEquals("Saida esperada não ocorreu", eventoModel, evento);
+        }
+
+        @Test
+        public void should_deleteById() {
+                should_findById();
+                service.deleteById(1);
+        }
+
+        @Test
+        public void should_PutEvento() {
+                when(serviceStatus.findById(4))
+                                .thenReturn(StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+                when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
+
+                Evento teste = Evento.builder() //
+                                .statusEvento(serviceStatus.findById(4)) //
+                                .local("Local") //
+                                .descricao("Descricao") //
+                                .limiteVagas(10) //
+                                .build();
+
+                Evento model = service.putEvento(1, teste);
+
+                assertEquals("Saida diferento do esperado", model, Evento.builder() //
+                                .idEvento(1) //
+                                .categoriaEvento(categoria) //
+                                .statusEvento(serviceStatus.findById(4)) //
+                                .nome("Nome") //
+                                .dataHoraInicio(evento.getDataHoraInicio()) //
+                                .dataHoraFim(evento.getDataHoraFim())//
+                                .local("Local") //
+                                .descricao("Descricao") //
+                                .limiteVagas(10) //
+                                .build());
+        }
+
+        @Test
+        public void should_cancelaEvento() {
+                when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
+                when(repositoryParticipacao.findByEvento(evento)).thenReturn(new ArrayList<Participacao>());
+
+                Evento teste = service.cancelaEvento(1);
+
+                assertEquals("Status evento deveria estar como Cancelado", teste.getStatusEvento(),
+                                StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+        }
 
 }

@@ -54,15 +54,15 @@ public class ParticipacaoControllerTest {
         .build();
 
     Evento evento = Evento.builder() //
-        .IdEvento(1) //
+        .idEvento(1) //
         .categoriaEvento(categoria) //
         .statusEvento(status) //
-        .Nome("Nome") //
-        .DataHoraInicio(new Date()) //
-        .DataHoraFim(new Date()) //
-        .Local("Local") //
-        .Descricao("Descricao") //
-        .LimiteVagas(10) //
+        .nome("Nome") //
+        .dataHoraInicio(new Date()) //
+        .dataHoraFim(new Date()) //
+        .local("Local") //
+        .descricao("Descricao") //
+        .limiteVagas(10) //
         .build();
 
     Participacao entity = Participacao.builder() //

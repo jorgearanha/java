@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.project.util.MyDateUtil.zeraDia;
+import static com.example.project.util.MyDateUtil.fimDia;
+
 import com.example.project.domain.entities.Evento;
 import com.example.project.domain.entities.StatusEvento;
 import com.example.project.exception.DataCantBeDeletedException;
@@ -34,6 +37,16 @@ public class EventoService {
         return eventoRepository.findAll();
     }
 
+    public List<Evento> listStatusAberto() {
+        List<Evento> list = eventoRepository.findByStatusEvento(StatusEvento.builder().IdEventoStatus(1).build());
+        return list;
+    }
+
+    public List<Evento> listByDate(Date date){
+        List<Evento> list = eventoRepository.findByDataHoraInicioBetween(zeraDia(date), fimDia(date));
+        return list;
+    }
+
     public Evento findById(Integer id) {
         Optional<Evento> evento = eventoRepository.findById(id);
         return evento.orElseThrow(() -> new DataNotFoundException("Evento Not found"));
@@ -54,14 +67,18 @@ public class EventoService {
         } catch (Exception e) {
             throw new DataCantBeDeletedException("Show 🙏 - Evento com participação não pode ser deletado.");
         }
-
     }
 
     public Evento cancelaEvento(Integer id) {
         Evento e = findById(id);
 
-        if (participacaoRepository.findByEvento(e).size() > 0 )
+        if (participacaoRepository.findByEvento(e).size() > 0)
             throw new EventoCantBeCanceledException("Show 🙏 - Evento com participacao não pode ser cancelado.");
+
+        if (zeraDia(e.getDataHoraInicio()).compareTo(zeraDia(Calendar.getInstance().getTime())) <= 0)
+            throw new EventoCantBeCanceledException(
+                    "Show 🙏 - Eventos de hoje, ou passados, não podem ser cancelados.");
+
         e.setStatusEvento(StatusEvento.builder() //
                 .IdEventoStatus(4) //
                 .NomeStatus("Cancelado") //
@@ -83,16 +100,6 @@ public class EventoService {
         eventoRepository.save(evento);
 
         return evento;
-    }
-
-    private Date zeraDia(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
     }
 
 }

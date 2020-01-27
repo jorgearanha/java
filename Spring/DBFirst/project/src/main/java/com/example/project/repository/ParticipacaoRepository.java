@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ParticipacaoRepository extends JpaRepository<Participacao, Integer> {
     List<Participacao> findByEvento(Evento evento);
+    Integer countByEvento(Evento evento);
 }
