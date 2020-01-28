@@ -41,8 +41,8 @@ public class StatusEventoServiceTest {
     //         .build();
 
     StatusEvento status = StatusEvento.builder() //
-            .IdEventoStatus(1) //
-            .NomeStatus("NomeStatus") //
+            .idEventoStatus(1) //
+            .nomeStatus("NomeStatus") //
             .build();
 
     // Evento evento = Evento.builder() //

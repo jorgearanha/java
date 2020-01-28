@@ -28,9 +28,9 @@ public class ParticipacaoMapperTest {
     public void should_Convert_ParticipacaoToParticipacaoResponse() {
         Participacao p = Participacao
             .builder()
-            .IdParticipacao(1)
-            .evento(Evento.builder().idEvento(1).build()).LoginParticipante("LoginParticipante").FlagPresente(true)
-                .Nota(10).Comentario("Comentario").build();
+            .idParticipacao(1)
+            .evento(Evento.builder().idEvento(1).build()).loginParticipante("LoginParticipante").flagPresente(true)
+                .nota(10).comentario("Comentario").build();
 
         ParticipacaoResponse dto = mapper.toDto(p);
 

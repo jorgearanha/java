@@ -3,15 +3,9 @@ package com.example.project.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.project.domain.dto.request.EventoCreateRequest;
 import com.example.project.domain.dto.request.ParticipacaoCreateRequest;
-import com.example.project.domain.dto.response.EventoResponse;
 import com.example.project.domain.dto.response.ParticipacaoResponse;
-import com.example.project.domain.entities.CategoriaEvento;
-import com.example.project.domain.entities.Evento;
 import com.example.project.domain.entities.Participacao;
-import com.example.project.domain.entities.StatusEvento;
-import com.example.project.domain.mapper.EventoMapper;
 import com.example.project.domain.mapper.ParticipacaoMapper;
 import com.example.project.service.EventoService;
 import com.example.project.service.ParticipacaoService;

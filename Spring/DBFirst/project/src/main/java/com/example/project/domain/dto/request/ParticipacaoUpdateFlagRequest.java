@@ -1,6 +1,5 @@
 package com.example.project.domain.dto.request;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;

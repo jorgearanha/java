@@ -35,8 +35,8 @@ public class CategoriaEventoControllerTest {
     CategoriaEventoController controller;
 
     CategoriaEvento entity = CategoriaEvento.builder() //
-        .IdCategoriaEvento(1) //
-        .NomeCategoria("NomeCategoria") //
+        .idCategoriaEvento(1) //
+        .nomeCategoria("NomeCategoria") //
         .build();
 
     CategoriaEventoResponse responseDto = CategoriaEventoResponse.builder() //

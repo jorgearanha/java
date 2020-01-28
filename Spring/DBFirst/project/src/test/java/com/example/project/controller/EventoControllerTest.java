@@ -47,13 +47,13 @@ public class EventoControllerTest {
     EventoController controller;
 
     CategoriaEvento categoria = CategoriaEvento.builder() //
-        .IdCategoriaEvento(1) //
-        .NomeCategoria("NomeCategoria") //
+        .idCategoriaEvento(1) //
+        .nomeCategoria("NomeCategoria") //
         .build();
 
     StatusEvento status = StatusEvento.builder() //
-        .IdEventoStatus(1) //
-        .NomeStatus("NomeStatus") //
+        .idEventoStatus(1) //
+        .nomeStatus("NomeStatus") //
         .build();
 
     Evento entity = Evento.builder() //

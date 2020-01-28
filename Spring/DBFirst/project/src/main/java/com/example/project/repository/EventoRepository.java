@@ -1,6 +1,5 @@
 package com.example.project.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import com.example.project.domain.entities.CategoriaEvento;
@@ -14,5 +13,5 @@ import org.springframework.stereotype.Repository;
 public interface EventoRepository extends JpaRepository<Evento, Integer> {
     List<Evento> findByStatusEvento(StatusEvento statusEvento);
     List<Evento> findByCategoriaEvento(CategoriaEvento categoriaEvento);
-    List<Evento> findByDataHoraInicioBetween(Date ini, Date fim);
+    List<Evento> findByDataHoraInicioBetween(String ini, String fim);
 }

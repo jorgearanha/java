@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class ParticipacaoUpdateFeedbackRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoginRequest {
 
-    private Integer Nota;
+    private String username;
 
-    private String Comentario;
+    private String password;
 
-}
+} 

@@ -22,6 +22,7 @@ public class MyDateUtil {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+
         return cal.getTime();
     }
 
@@ -39,11 +40,27 @@ public class MyDateUtil {
         return cal.getTime();
     }
 
-    public static boolean maiorOuIgual(Date date, Date reference){
+    public static Date montaDate(Integer dia, Integer mes, Integer ano) {
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(Calendar.DAY_OF_MONTH, dia);
+        cal.set(Calendar.MONTH, mes);
+        cal.set(Calendar.YEAR, ano);
+
+        return cal.getTime();
+    }
+
+    public static boolean maiorOuIgual(Date date, Date reference) {
         return date.compareTo(reference) >= 0;
     }
 
-    public static boolean menorOuIgual(Date date, Date reference){
+    public static boolean menorOuIgual(Date date, Date reference) {
         return date.compareTo(reference) <= 0;
+    }
+
+    public static String stringDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.YEAR);
     }
 }

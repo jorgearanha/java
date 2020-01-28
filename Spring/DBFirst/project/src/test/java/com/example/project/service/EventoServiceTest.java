@@ -9,6 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static com.example.project.util.MyDateUtil.stringDate;
+
 import static com.example.project.util.MyDateUtil.dayPlusOne;
 import static com.example.project.util.MyDateUtil.zeraDia;
 import static com.example.project.util.MyDateUtil.fimDia;
@@ -17,7 +19,6 @@ import static com.example.project.util.MyDateUtil.menorOuIgual;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,13 +60,13 @@ public class EventoServiceTest {
         private EventoService service;
 
         CategoriaEvento categoria = CategoriaEvento.builder() //
-                        .IdCategoriaEvento(1) //
-                        .NomeCategoria("NomeCategoria") //
+                        .idCategoriaEvento(1) //
+                        .nomeCategoria("NomeCategoria") //
                         .build();
 
         StatusEvento status = StatusEvento.builder() //
-                        .IdEventoStatus(1) //
-                        .NomeStatus("NomeStatus") //
+                        .idEventoStatus(1) //
+                        .nomeStatus("NomeStatus") //
                         .build();
 
         Evento evento = Evento.builder() //
@@ -81,12 +82,12 @@ public class EventoServiceTest {
                         .build();
 
         Participacao participacao = Participacao.builder() //
-                        .IdParticipacao(1) //
+                        .idParticipacao(1) //
                         .evento(evento) //
-                        .LoginParticipante("LoginParticipante") //
-                        .FlagPresente(false) //
-                        .Nota(10) //
-                        .Comentario("Comentario") //
+                        .loginParticipante("LoginParticipante") //
+                        .flagPresente(false) //
+                        .nota(10) //
+                        .comentario("Comentario") //
                         .build();
 
         @Test
@@ -289,8 +290,8 @@ public class EventoServiceTest {
 
                 List<Evento> listModel = service.listByDate(dayPlusOne());
 
-                verify(repositoryMock, times(1)).findByDataHoraInicioBetween(zeraDia(dayPlusOne()),
-                                fimDia(dayPlusOne()));
+                verify(repositoryMock, times(1)).findByDataHoraInicioBetween(stringDate(zeraDia(dayPlusOne())),
+                                stringDate(fimDia(dayPlusOne())));
 
                 assertTrue("O retorno deve ser uma lista!", listModel instanceof List<?>);
                 assertTrue("A lista de retorno deve ser de StatusEvento!", listModel.get(0) instanceof Evento);
@@ -300,6 +301,27 @@ public class EventoServiceTest {
                                         maiorOuIgual(evento.getDataHoraInicio(), zeraDia(dayPlusOne())) //
                                                         && menorOuIgual(evento.getDataHoraInicio(),
                                                                         fimDia(dayPlusOne())));
+                }
+        }
+
+        @Test
+        public void should_listByCategoria() {
+                List<Evento> list = new ArrayList<>();
+                list.add(evento);
+                list.add(evento);
+
+                when(repositoryMock.findByCategoriaEvento(categoria)).thenReturn(list);
+
+                List<Evento> listModel = service.listByCategoria(categoria);
+
+                verify(repositoryMock, times(1)).findByCategoriaEvento(categoria);
+
+                assertTrue("O retorno deve ser uma lista", listModel instanceof List<?>);
+                assertTrue("A lista de retorno deve ser de StatusEvento", listModel.get(0) instanceof Evento);
+
+                for (Evento evento : listModel) {
+                        assertTrue("O evento deve estar na categoria indicada", //
+                                        evento.getCategoriaEvento().equals(categoria));
                 }
         }
 
@@ -321,7 +343,7 @@ public class EventoServiceTest {
         @Test
         public void should_PutEvento() {
                 when(serviceStatus.findById(4))
-                                .thenReturn(StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+                                .thenReturn(StatusEvento.builder().idEventoStatus(4).nomeStatus("Cancelado").build());
                 when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(evento));
 
                 Evento teste = Evento.builder() //
@@ -354,7 +376,7 @@ public class EventoServiceTest {
                 Evento teste = service.cancelaEvento(1);
 
                 assertEquals("Status evento deveria estar como Cancelado", teste.getStatusEvento(),
-                                StatusEvento.builder().IdEventoStatus(4).NomeStatus("Cancelado").build());
+                                StatusEvento.builder().idEventoStatus(4).nomeStatus("Cancelado").build());
         }
 
 }

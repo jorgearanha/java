@@ -44,13 +44,13 @@ public class ParticipacaoControllerTest {
     ParticipacaoController controller;
 
     CategoriaEvento categoria = CategoriaEvento.builder() //
-        .IdCategoriaEvento(1) //
-        .NomeCategoria("NomeCategoria") //
+        .idCategoriaEvento(1) //
+        .nomeCategoria("NomeCategoria") //
         .build();
 
     StatusEvento status = StatusEvento.builder() //
-        .IdEventoStatus(1) //
-        .NomeStatus("NomeStatus") //
+        .idEventoStatus(1) //
+        .nomeStatus("NomeStatus") //
         .build();
 
     Evento evento = Evento.builder() //
@@ -66,12 +66,12 @@ public class ParticipacaoControllerTest {
         .build();
 
     Participacao entity = Participacao.builder() //
-        .IdParticipacao(1) //
+        .idParticipacao(1) //
         .evento(evento) //
-        .LoginParticipante("LoginParticipante") // 
-        .FlagPresente(true) //
-        .Nota(10) //
-        .Comentario("Comentario") //
+        .loginParticipante("LoginParticipante") //
+        .flagPresente(true) //
+        .nota(10) //
+        .comentario("Comentario") //
         .build();
     
     ParticipacaoResponse responseDto = ParticipacaoResponse.builder() //

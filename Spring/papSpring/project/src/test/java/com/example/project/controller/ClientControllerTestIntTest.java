@@ -72,7 +72,7 @@ public class ClientControllerTestIntTest {
     }
 
     @Test
-    public void should_return403_whenPostInvalid() throws Exception {
+    public void should_return400_whenPostInvalid() throws Exception {
         // given
         ClientCreateRequest request = ClientCreateRequest.builder()//
                 .name("Name").phone("phone").build();
@@ -86,7 +86,7 @@ public class ClientControllerTestIntTest {
     }
 
     @Test
-    public void should_return403_whenPostInvalid2() throws Exception {
+    public void should_return400_whenPostInvalid2() throws Exception {
         // given
         ClientCreateRequest request = ClientCreateRequest.builder()//
                 .name(null).phone("phone").build();

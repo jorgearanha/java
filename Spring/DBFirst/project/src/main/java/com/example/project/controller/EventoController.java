@@ -3,7 +3,10 @@ package com.example.project.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.project.util.MyDateUtil.montaDate;
+
 import com.example.project.domain.dto.request.EventoCreateRequest;
+import com.example.project.domain.dto.request.EventoUpdateRequest;
 import com.example.project.domain.dto.response.EventoResponse;
 import com.example.project.domain.entities.Evento;
 import com.example.project.domain.mapper.EventoMapper;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -53,6 +57,21 @@ public class EventoController {
 				.collect(Collectors.toList()));
 	}
 
+	@GetMapping(value = "/status_aberto")
+    public ResponseEntity<List<EventoResponse>> listStatusAberto() {
+		return ResponseEntity.ok(eventoService.listStatusAberto().stream() //
+				.map(x -> mapper.toDto(x)) //
+				.collect(Collectors.toList()));
+	}
+
+	@GetMapping(value = "/data/{dia}/{mes}/{ano}")
+    public ResponseEntity<List<EventoResponse>> getByDate(@PathVariable Integer dia, @PathVariable Integer mes, @PathVariable Integer ano) {
+		System.out.println(eventoService.listByDate(montaDate(dia, mes, ano)));
+		return ResponseEntity.ok(eventoService.listByDate(montaDate(dia, mes, ano)).stream() //
+				.map(x -> mapper.toDto(x)) //
+				.collect(Collectors.toList())); 
+    }
+
 	@PostMapping
 	public ResponseEntity<EventoResponse> post(@RequestBody EventoCreateRequest model) {
 		Evento evento = mapper.fromDto(model);
@@ -75,8 +94,11 @@ public class EventoController {
 		return ResponseEntity.ok("ISOLADOS!!!");
 	}
 
-	// @PutMapping(value = "/{id}")
-	// public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody EventoCreateRequest model) {
-	// 	return ResponseEntity.ok("Gratidão");
-	// }
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody EventoUpdateRequest model) {
+		return ResponseEntity.ok("Gratidão");
+	}
+
+
+	
 }

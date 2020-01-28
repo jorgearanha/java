@@ -2,28 +2,37 @@ package com.example.project.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * SiteUserRole
+ */
+@Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Entity
-public class CategoriaEvento {
+public class SiteUserRole {
 
     @Id
-    @Column(name = "IdCategoriaEvento")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCategoriaEvento;
+    private Integer id;
 
-    @Column(name = "NomeCategoria", nullable = false, length = 250)
-    private String nomeCategoria;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "siteRoleId", nullable = false)
+    private SiteRole siteRole;
 
-}
+    @Column(name = "siteUserId", nullable = false)
+    private Integer siteUserId;
+
+} 

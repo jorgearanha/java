@@ -37,8 +37,8 @@ public class CategoriaEventoServiceTest {
 
     CategoriaEvento entity = CategoriaEvento
         .builder() //
-        .IdCategoriaEvento(1) //
-        .NomeCategoria("NomeCategoria") //
+        .idCategoriaEvento(1) //
+        .nomeCategoria("NomeCategoria") //
         .build();
 
     @Test

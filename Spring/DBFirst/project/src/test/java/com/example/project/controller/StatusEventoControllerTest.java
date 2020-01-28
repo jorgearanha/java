@@ -35,8 +35,8 @@ public class StatusEventoControllerTest {
     StatusEventoController controller;
 
     StatusEvento entity = StatusEvento.builder() //
-            .IdEventoStatus(1) //
-            .NomeStatus("NomeStatus") //
+            .idEventoStatus(1) //
+            .nomeStatus("NomeStatus") //
             .build();
 
     StatusEventoResponse responseDto = StatusEventoResponse.builder() //

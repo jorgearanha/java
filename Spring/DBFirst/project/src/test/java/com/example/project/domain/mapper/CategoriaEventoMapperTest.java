@@ -27,8 +27,8 @@ public class CategoriaEventoMapperTest {
     public void should_Convert_CategoriaEventoToCategoriaEventoResponse() {
         CategoriaEvento ce = CategoriaEvento
             .builder()
-            .IdCategoriaEvento(1)
-            .NomeCategoria("NomeCategoria")
+            .idCategoriaEvento(1)
+            .nomeCategoria("NomeCategoria")
             .build();
         
         CategoriaEventoResponse dto = mapper.toDto(ce);

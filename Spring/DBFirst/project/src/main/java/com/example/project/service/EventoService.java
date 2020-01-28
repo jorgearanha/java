@@ -7,7 +7,9 @@ import java.util.Optional;
 
 import static com.example.project.util.MyDateUtil.zeraDia;
 import static com.example.project.util.MyDateUtil.fimDia;
+import static com.example.project.util.MyDateUtil.stringDate;
 
+import com.example.project.domain.entities.CategoriaEvento;
 import com.example.project.domain.entities.Evento;
 import com.example.project.domain.entities.StatusEvento;
 import com.example.project.exception.DataCantBeDeletedException;
@@ -38,12 +40,18 @@ public class EventoService {
     }
 
     public List<Evento> listStatusAberto() {
-        List<Evento> list = eventoRepository.findByStatusEvento(StatusEvento.builder().IdEventoStatus(1).build());
+        List<Evento> list = eventoRepository.findByStatusEvento(StatusEvento.builder().idEventoStatus(1).build());
         return list;
     }
 
-    public List<Evento> listByDate(Date date){
-        List<Evento> list = eventoRepository.findByDataHoraInicioBetween(zeraDia(date), fimDia(date));
+    public List<Evento> listByDate(Date date) {
+        List<Evento> list = eventoRepository.findByDataHoraInicioBetween(stringDate(zeraDia(date)),
+                stringDate(fimDia(date)));
+        return list;
+    }
+
+    public List<Evento> listByCategoria(CategoriaEvento categoria) {
+        List<Evento> list = eventoRepository.findByCategoriaEvento(categoria);
         return list;
     }
 
@@ -80,8 +88,8 @@ public class EventoService {
                     "Show 🙏 - Eventos de hoje, ou passados, não podem ser cancelados.");
 
         e.setStatusEvento(StatusEvento.builder() //
-                .IdEventoStatus(4) //
-                .NomeStatus("Cancelado") //
+                .idEventoStatus(4) //
+                .nomeStatus("Cancelado") //
                 .build());
 
         eventoRepository.save(e);

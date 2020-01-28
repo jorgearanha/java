@@ -44,13 +44,13 @@ public class ParticipacaoServiceTest {
     private ParticipacaoService service;
 
     CategoriaEvento categoria = CategoriaEvento.builder() //
-            .IdCategoriaEvento(1) //
-            .NomeCategoria("NomeCategoria") //
+            .idCategoriaEvento(1) //
+            .nomeCategoria("NomeCategoria") //
             .build();
 
     StatusEvento status = StatusEvento.builder() //
-            .IdEventoStatus(1) //
-            .NomeStatus("NomeStatus") //
+            .idEventoStatus(1) //
+            .nomeStatus("NomeStatus") //
             .build();
 
     Evento evento = Evento.builder() //
@@ -66,12 +66,12 @@ public class ParticipacaoServiceTest {
             .build();
 
     Participacao participacao = Participacao.builder() //
-            .IdParticipacao(1) //
+            .idParticipacao(1) //
             .evento(evento) //
-            .LoginParticipante("LoginParticipante") //
-            .FlagPresente(false) //
-            .Nota(10) //
-            .Comentario("Comentario") //
+            .loginParticipante("LoginParticipante") //
+            .flagPresente(false) //
+            .nota(10) //
+            .comentario("Comentario") //
             .build();
 
     @Test
@@ -90,7 +90,7 @@ public class ParticipacaoServiceTest {
         Evento teste = Evento.builder() //
                 .idEvento(2) //
                 .categoriaEvento(categoria) //
-                .statusEvento(StatusEvento.builder().IdEventoStatus(2).build()) //
+                .statusEvento(StatusEvento.builder().idEventoStatus(2).build()) //
                 .nome("Nome") //
                 .dataHoraInicio(new Date()) //
                 .dataHoraFim(new Date()) //
@@ -100,12 +100,12 @@ public class ParticipacaoServiceTest {
                 .build();
 
         Participacao participacao = Participacao.builder() //
-                .IdParticipacao(1) //
+                .idParticipacao(1) //
                 .evento(evento) //
-                .LoginParticipante("LoginParticipante") //
-                .FlagPresente(false) //
-                .Nota(10) //
-                .Comentario("Comentario") //
+                .loginParticipante("LoginParticipante") //
+                .flagPresente(false) //
+                .nota(10) //
+                .comentario("Comentario") //
                 .build();
 
         when(eventoService.findById(anyInt())).thenReturn(teste);
@@ -168,12 +168,12 @@ public class ParticipacaoServiceTest {
         Participacao teste = service.putFlag(1);
 
         assertEquals(teste, Participacao.builder() //
-                .IdParticipacao(1) //
+                .idParticipacao(1) //
                 .evento(evento) //
-                .LoginParticipante("LoginParticipante") //
-                .FlagPresente(true) //
-                .Nota(10) //
-                .Comentario("Comentario") //
+                .loginParticipante("LoginParticipante") //
+                .flagPresente(true) //
+                .nota(10) //
+                .comentario("Comentario") //
                 .build());
     }
 
@@ -181,20 +181,20 @@ public class ParticipacaoServiceTest {
     public void should_putFeedback() {
 
         Participacao model = Participacao.builder() //
-                .Comentario("Nunca fui, muito bom") //
-                .Nota(1).build();
+                .comentario("Nunca fui, muito bom") //
+                .nota(1).build();
 
         when(repositoryMock.findById(anyInt())).thenReturn(Optional.of(participacao));
 
         Participacao teste = service.putFeedback(1, model);
 
         assertEquals(teste, Participacao.builder() //
-                .IdParticipacao(1) //
+                .idParticipacao(1) //
                 .evento(evento) //
-                .LoginParticipante("LoginParticipante") //
-                .FlagPresente(false) //
-                .Comentario("Nunca fui, muito bom") //
-                .Nota(1).build());
+                .loginParticipante("LoginParticipante") //
+                .flagPresente(false) //
+                .comentario("Nunca fui, muito bom") //
+                .nota(1).build());
     }
 
     @Test

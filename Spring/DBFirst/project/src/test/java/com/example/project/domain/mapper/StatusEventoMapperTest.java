@@ -27,8 +27,8 @@ public class StatusEventoMapperTest {
     public void should_Convert_StatusEventoToStatusEventoResponse() {
         StatusEvento se = StatusEvento
             .builder()
-            .IdEventoStatus(1)
-            .NomeStatus("NomeStatus")
+            .idEventoStatus(1)
+            .nomeStatus("NomeStatus")
             .build();
 
         StatusEventoResponse dto = mapper.toDto(se);
