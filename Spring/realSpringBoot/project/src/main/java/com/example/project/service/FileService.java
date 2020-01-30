@@ -11,8 +11,8 @@ import static com.example.project.util.FileUtil.fechaWorkBook;
 import static com.example.project.util.FileUtil.multiPartFileToInputStream;
 import static com.example.project.util.FileUtil.abreWorkbook;
 
-import com.example.project.domain.dto.entities.Product;
-import com.example.project.domain.dto.entities.Supplier;
+import com.example.project.domain.entities.Product;
+import com.example.project.domain.entities.Supplier;
 import com.example.project.exception.BusinessRuleException;
 
 import org.apache.poi.ss.usermodel.Row;

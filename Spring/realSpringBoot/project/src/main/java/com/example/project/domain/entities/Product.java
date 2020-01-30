@@ -1,4 +1,4 @@
-package com.example.project.domain.dto.entities;
+package com.example.project.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

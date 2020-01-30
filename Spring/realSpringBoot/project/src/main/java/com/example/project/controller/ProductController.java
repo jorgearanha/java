@@ -5,7 +5,7 @@ import java.util.List;
 
 import static com.example.project.util.FileUtil.stringToResource;
 
-import com.example.project.domain.dto.entities.Product;
+import com.example.project.domain.entities.Product;
 import com.example.project.domain.dto.response.BashExcelResponse;
 import com.example.project.service.ProductService;
 import com.example.project.service.FileService;

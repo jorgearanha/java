@@ -2,7 +2,7 @@ package com.example.project.controller;
 
 import java.util.List;
 
-import com.example.project.domain.dto.entities.Supplier;
+import com.example.project.domain.entities.Supplier;
 import com.example.project.service.SupplierService;
 
 import org.springframework.beans.factory.annotation.Autowired;
