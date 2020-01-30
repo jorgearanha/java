@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     url: jdbc:sqlserver://localhost;databaseName=springboot
     username: sa
-    password: '123456'
+    password: 'JJ1ls2na3a)'
   jpa:
     show-sql: false
     hibernate:
