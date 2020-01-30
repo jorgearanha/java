@@ -1,6 +1,4 @@
-package com.example.project.domain;
-
-import java.util.Date;
+package com.example.project.domain.dto.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,23 +18,24 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerOrder {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(name = "OrderDate", nullable = false)
-    private Date orderDate;
-
-    @Column(name = "OrderNumber", nullable = false, length = 10, columnDefinition = "nvarchar")
-    private String orderNumber;
-
+    
     @ManyToOne
-    @JoinColumn(name = "CustomerId", nullable = false)
-    private Customer customer;
+    @JoinColumn(name = "OrderId", nullable = false)
+    private CustomerOrder customerOrder;    
+    
+    @ManyToOne
+    @JoinColumn(name = "ProductId", nullable = false)
+    private Product product;    
 
-    @Column(name = "TotalAmount", nullable = false, columnDefinition = "decimal")
-    private Double totalAmount;
+    @Column(name = "UnitPrice", nullable = false, columnDefinition = "decimal")
+    private Double unitPrice;
 
+    @Column(name = "Quantity", nullable = false, length = 30)
+    private Integer quantity;
+    
 }

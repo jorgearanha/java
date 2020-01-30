@@ -3,7 +3,7 @@ package com.example.project.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.project.domain.Supplier;
+import com.example.project.domain.dto.entities.Supplier;
 import com.example.project.exception.DataNotFoundException;
 import com.example.project.repository.SupplierRepository;
 

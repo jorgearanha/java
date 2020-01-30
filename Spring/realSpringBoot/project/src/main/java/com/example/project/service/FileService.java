@@ -1,30 +1,25 @@
 package com.example.project.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.Time;
 import java.util.Iterator;
-import java.util.List;
 
-import com.example.project.domain.Product;
-import com.example.project.domain.Supplier;
+import static com.example.project.util.FileUtil.fechaWorkBook;
+import static com.example.project.util.FileUtil.multiPartFileToInputStream;
+import static com.example.project.util.FileUtil.abreWorkbook;
+
+import com.example.project.domain.dto.entities.Product;
+import com.example.project.domain.dto.entities.Supplier;
 import com.example.project.exception.BusinessRuleException;
-import com.example.project.exception.DataNotFoundException;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,14 +53,6 @@ public class FileService {
 
     }
 
-    public Resource stringToResource(String path) {
-        try {
-            return new UrlResource((Paths.get(path)).toUri());
-        } catch (MalformedURLException e) {
-            throw new BusinessRuleException("Not found");
-        }
-    }
-
     public MediaType tipoResource(Resource resource) {
         String type = "";
 
@@ -78,12 +65,15 @@ public class FileService {
         return MediaType.parseMediaType(type);
     }
 
-    public void tableToProduct() {
-        Iterator<Row> iterator = iteratorTable();
+    public Integer tableToProduct(MultipartFile file) {
+        Integer count = 0;
+        
+        Iterator<Row> iterator = iteratorTable(multiPartFileToInputStream(file));
         iterator.next();
 
         while (iterator.hasNext()) {
 
+            count++;
             Row currentRow = iterator.next();
 
             Product entity = Product.builder() //
@@ -99,29 +89,20 @@ public class FileService {
             productService.createProduct(entity);
         }
 
+        return count;
+
     }
 
-    private Iterator<Row> iteratorTable() {
-        String arq = "C:\\Users\\jorge.aranha\\Documents\\Git\\java\\Spring\\decola.xlsx";
- 
-        Workbook workbook = null;
-
-        try {
-            FileInputStream excelFile = new FileInputStream(new File(arq));
-            workbook = new XSSFWorkbook(excelFile);
-        } catch (IOException e) {
-            throw new DataNotFoundException("Problema ao ler o arquivo");
-        }
+    private Iterator<Row> iteratorTable(InputStream inputStream) {
+        Workbook workbook = abreWorkbook(inputStream);
+        
         Sheet datatypeSheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = datatypeSheet.iterator();
 
-        try {
-            workbook.close();
-        } catch (IOException e) {
-            throw new BusinessRuleException("Erro ao fechar o workbook");
-        }
+        fechaWorkBook(workbook);
 
         return iterator;
     }
 
+    
 }

@@ -3,7 +3,7 @@ package com.example.project.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.project.domain.OrderItem;
+import com.example.project.domain.dto.entities.OrderItem;
 import com.example.project.exception.DataNotFoundException;
 import com.example.project.repository.OrderItemRepository;
 

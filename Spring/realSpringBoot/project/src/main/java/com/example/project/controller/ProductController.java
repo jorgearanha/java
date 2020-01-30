@@ -1,8 +1,12 @@
 package com.example.project.controller;
 
+import java.util.Date;
 import java.util.List;
 
-import com.example.project.domain.Product;
+import static com.example.project.util.FileUtil.stringToResource;
+
+import com.example.project.domain.dto.entities.Product;
+import com.example.project.domain.dto.response.BashExcelResponse;
 import com.example.project.service.ProductService;
 import com.example.project.service.FileService;
 
@@ -39,12 +43,12 @@ public class ProductController {
 
 	@GetMapping(value = "image={id}")
 	public ResponseEntity<Resource> getImageById(@PathVariable Integer id) {
-		Resource resource = fileService.stringToResource(productService.getImage(id));
+		Resource resource = stringToResource(productService.getImage(id));
 
-		return ResponseEntity.ok()
-			.contentType(fileService.tipoResource(resource))
-			//.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-			.body(resource);
+		return ResponseEntity.ok().contentType(fileService.tipoResource(resource))
+				// .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
+				// resource.getFilename() + "\"")
+				.body(resource);
 	}
 
 	@PutMapping(value = "image={id}")
@@ -53,10 +57,17 @@ public class ProductController {
 		return ResponseEntity.ok(productService.updateImage(imagePath, id));
 	}
 
-	@PostMapping(value="table_to_product")
-	public ResponseEntity<String> tableToProduct() {
-		fileService.tableToProduct();		
-		return ResponseEntity.ok("Salvo com sucesso");
+	@PostMapping(value = "table_to_product")
+	public ResponseEntity<BashExcelResponse> tableToProduct(MultipartFile file) {
+		Integer rows = fileService.tableToProduct(file);
+
+		BashExcelResponse bashExcelResponse = BashExcelResponse.builder() //
+				.linhas("Salvo com sucesso! " + rows + " linha(s)") //
+				.data(new Date().toString()) //
+				.arquivo(file.getOriginalFilename()) //
+				.build();
+
+		return ResponseEntity.ok(bashExcelResponse);
 	}
-	
+
 }
