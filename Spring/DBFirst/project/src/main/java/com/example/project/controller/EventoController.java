@@ -8,6 +8,7 @@ import static com.example.project.util.MyDateUtil.montaDate;
 import com.example.project.domain.dto.request.EventoCreateRequest;
 import com.example.project.domain.dto.request.EventoUpdateRequest;
 import com.example.project.domain.dto.response.EventoResponse;
+import com.example.project.domain.entities.CategoriaEvento;
 import com.example.project.domain.entities.Evento;
 import com.example.project.domain.mapper.EventoMapper;
 import com.example.project.service.CategoriaEventoService;
@@ -64,6 +65,14 @@ public class EventoController {
 				.collect(Collectors.toList()));
 	}
 
+	@GetMapping(value = "/categoria={id}")
+    public ResponseEntity<List<EventoResponse>> listByCategoria(@PathVariable Integer id) {
+		CategoriaEvento categoriaEvento = categoriaEventoService.findById(id);
+		return ResponseEntity.ok(eventoService.listByCategoria(categoriaEvento).stream() //
+				.map(x -> mapper.toDto(x)) //
+				.collect(Collectors.toList()));
+	}
+
 	@GetMapping(value = "/data/{dia}/{mes}/{ano}")
     public ResponseEntity<List<EventoResponse>> getByDate(@PathVariable Integer dia, @PathVariable Integer mes, @PathVariable Integer ano) {
 		System.out.println(eventoService.listByDate(montaDate(dia, mes, ano)));
@@ -95,10 +104,18 @@ public class EventoController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody EventoUpdateRequest model) {
+	public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody EventoUpdateRequest evento) {
+		Evento model = mapper.fromUDto(evento);
+		System.out.println(model);
+		eventoService.putEvento(id, model);
 		return ResponseEntity.ok("Gratidão");
 	}
 
+	@PutMapping(value = "cancela/{id}")
+	public ResponseEntity<?> cancela(@PathVariable Integer id) {
+		eventoService.cancelaEvento(id);
+		return ResponseEntity.ok("Gratidão");
+	}
 
 	
 }

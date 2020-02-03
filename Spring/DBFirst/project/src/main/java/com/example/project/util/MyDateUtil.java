@@ -40,12 +40,11 @@ public class MyDateUtil {
         return cal.getTime();
     }
 
-    public static Date montaDate(Integer dia, Integer mes, Integer ano) {
+    public static Date montaDate(int dia, int mes, int ano) {
         Calendar cal = Calendar.getInstance();
 
-        cal.set(Calendar.DAY_OF_MONTH, dia);
-        cal.set(Calendar.MONTH, mes);
-        cal.set(Calendar.YEAR, ano);
+        mes--;
+        cal.set(ano, mes, dia);
 
         return cal.getTime();
     }
@@ -61,6 +60,6 @@ public class MyDateUtil {
     public static String stringDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        return cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.YEAR);
+        return cal.get(Calendar.DAY_OF_MONTH) + "." + cal.get(Calendar.MONTH) + "." + cal.get(Calendar.YEAR);
     }
 }

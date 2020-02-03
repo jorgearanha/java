@@ -4,6 +4,7 @@ import com.example.project.domain.dto.request.EventoCreateRequest;
 import com.example.project.domain.dto.request.EventoUpdateRequest;
 import com.example.project.domain.dto.response.EventoResponse;
 import com.example.project.domain.entities.Evento;
+import com.example.project.domain.entities.StatusEvento;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,11 @@ public class EventoMapper {
     }
 
     public Evento fromUDto(EventoUpdateRequest input) {
-        return mapper.map(input, Evento.class);
+        Evento evento = mapper.map(input, Evento.class);
+        evento.setStatusEvento(StatusEvento.builder() //
+            .idEventoStatus(input.getIdEventoStatus())
+            .build());
+        return evento;
     }
 
 }
