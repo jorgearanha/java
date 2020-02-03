@@ -46,8 +46,7 @@ public class EventoService {
     }
 
     public List<Evento> listByDate(Date date) {
-        System.out.println(montaDate(1, 1, 2020));
-        List<Evento> list = eventoRepository.findPersonalizado(zeraDia(date));
+        List<Evento> list = eventoRepository.findByDataHoraInicioBetween(stringDate(zeraDia(date)), stringDate(fimDia(date)));
         return list;
     }
 

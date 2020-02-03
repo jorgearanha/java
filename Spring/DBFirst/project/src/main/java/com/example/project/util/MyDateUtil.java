@@ -15,6 +15,15 @@ public class MyDateUtil {
         return cal.getTime();
     }
 
+    public static Date datePlus(Date date, int x) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.add(Calendar.DAY_OF_MONTH, x);
+
+        return cal.getTime();
+    }
+
     public static Date zeraDia(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

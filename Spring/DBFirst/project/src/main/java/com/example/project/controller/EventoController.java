@@ -73,13 +73,13 @@ public class EventoController {
 				.collect(Collectors.toList()));
 	}
 
-	@GetMapping(value = "/data/{dia}/{mes}/{ano}")
-    public ResponseEntity<List<EventoResponse>> getByDate(@PathVariable Integer dia, @PathVariable Integer mes, @PathVariable Integer ano) {
-		System.out.println(eventoService.listByDate(montaDate(dia, mes, ano)));
-		return ResponseEntity.ok(eventoService.listByDate(montaDate(dia, mes, ano)).stream() //
-				.map(x -> mapper.toDto(x)) //
-				.collect(Collectors.toList())); 
-    }
+	// @GetMapping(value = "/data/{dia}/{mes}/{ano}")
+    // public ResponseEntity<List<EventoResponse>> getByDate(@PathVariable Integer dia, @PathVariable Integer mes, @PathVariable Integer ano) {
+	// 	System.out.println(eventoService.listByDate(montaDate(dia, mes, ano)));
+	// 	return ResponseEntity.ok(eventoService.listByDate(montaDate(dia, mes, ano)).stream() //
+	// 			.map(x -> mapper.toDto(x)) //
+	// 			.collect(Collectors.toList())); 
+    // }
 
 	@PostMapping
 	public ResponseEntity<EventoResponse> post(@RequestBody EventoCreateRequest model) {
@@ -106,15 +106,14 @@ public class EventoController {
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<?> put(@PathVariable Integer id, @RequestBody EventoUpdateRequest evento) {
 		Evento model = mapper.fromUDto(evento);
-		System.out.println(model);
-		eventoService.putEvento(id, model);
-		return ResponseEntity.ok("Gratidão");
+		Evento e = eventoService.putEvento(id, model);
+		return ResponseEntity.ok(mapper.toDto(e));
 	}
 
 	@PutMapping(value = "cancela/{id}")
 	public ResponseEntity<?> cancela(@PathVariable Integer id) {
-		eventoService.cancelaEvento(id);
-		return ResponseEntity.ok("Gratidão");
+	    Evento e = eventoService.cancelaEvento(id);
+		return ResponseEntity.ok(mapper.toDto(e));
 	}
 
 	
