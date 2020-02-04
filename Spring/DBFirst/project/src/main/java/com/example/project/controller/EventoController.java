@@ -30,21 +30,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/evento")
 public class EventoController {
 
-	private final EventoService eventoService;
-	private final CategoriaEventoService categoriaEventoService;
-	private final StatusEventoService statusEventoService;
-	private final EventoMapper mapper;
-
 	@Autowired
-	public EventoController(EventoService eventoService, 
-		CategoriaEventoService categoriaEventoService, 
-		StatusEventoService statusEventoService,  
-		EventoMapper eventoMapper) {
-		this.eventoService = eventoService;
-		this.categoriaEventoService = categoriaEventoService;
-		this.statusEventoService = statusEventoService;
-		this.mapper = eventoMapper;
-	}
+	private EventoService eventoService;
+	@Autowired
+	private CategoriaEventoService categoriaEventoService;
+	@Autowired
+	private StatusEventoService statusEventoService;
+	@Autowired
+	private EventoMapper mapper;
 
 	@GetMapping(value = "/{id}")
     public ResponseEntity<EventoResponse> getById(@PathVariable Integer id) {
@@ -73,13 +66,13 @@ public class EventoController {
 				.collect(Collectors.toList()));
 	}
 
-	// @GetMapping(value = "/data/{dia}/{mes}/{ano}")
-    // public ResponseEntity<List<EventoResponse>> getByDate(@PathVariable Integer dia, @PathVariable Integer mes, @PathVariable Integer ano) {
-	// 	System.out.println(eventoService.listByDate(montaDate(dia, mes, ano)));
-	// 	return ResponseEntity.ok(eventoService.listByDate(montaDate(dia, mes, ano)).stream() //
-	// 			.map(x -> mapper.toDto(x)) //
-	// 			.collect(Collectors.toList())); 
-    // }
+	@GetMapping(value = "/data/{dia}/{mes}/{ano}")
+    public ResponseEntity<List<EventoResponse>> listByDate(@PathVariable Integer dia, @PathVariable Integer mes, @PathVariable Integer ano) {
+		System.out.println(montaDate(dia, mes, ano));
+		return ResponseEntity.ok(eventoService.listByDate(montaDate(dia, mes, ano)).stream() //
+				.map(x -> mapper.toDto(x)) //
+				.collect(Collectors.toList())); 
+    }
 
 	@PostMapping
 	public ResponseEntity<EventoResponse> post(@RequestBody EventoCreateRequest model) {

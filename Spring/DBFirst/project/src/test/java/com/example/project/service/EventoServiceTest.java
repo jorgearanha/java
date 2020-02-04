@@ -9,8 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static com.example.project.util.MyDateUtil.stringDate;
-
 import static com.example.project.util.MyDateUtil.dayPlusOne;
 import static com.example.project.util.MyDateUtil.zeraDia;
 import static com.example.project.util.MyDateUtil.fimDia;
@@ -290,8 +288,8 @@ public class EventoServiceTest {
 
                 List<Evento> listModel = service.listByDate(dayPlusOne());
 
-                verify(repositoryMock, times(1)).findByDataHoraInicioBetween(stringDate(zeraDia(dayPlusOne())),
-                                stringDate(fimDia(dayPlusOne())));
+                verify(repositoryMock, times(1)).findByDataHoraInicioBetween(zeraDia(dayPlusOne()),
+                                fimDia(dayPlusOne()));
 
                 assertTrue("O retorno deve ser uma lista!", listModel instanceof List<?>);
                 assertTrue("A lista de retorno deve ser de StatusEvento!", listModel.get(0) instanceof Evento);

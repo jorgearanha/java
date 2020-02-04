@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.example.project.util.MyDateUtil.dayPlusOne;
 import static com.example.project.util.MyDateUtil.datePlus;
+import static com.example.project.util.MyDateUtil.montaDate;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -31,7 +32,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * EventoControllerIntTest
@@ -130,6 +130,40 @@ public class EventoControllerIntTest {
 
         @Test
         public void should_listStatusAberto() throws Exception {
+                Evento evento2 = Evento.builder() //
+                        .idEvento(2) //
+                        .categoriaEvento(categoria) //
+                        .statusEvento(status) //
+                        .nome("Nome") //
+                        .dataHoraInicio(datePlus(dayPlusOne(), 10)) //
+                        .dataHoraFim(datePlus(dayPlusOne(), 10)) //
+                        .local("Local") //
+                        .descricao("Descricao") //
+                        .limiteVagas(10) //
+                        .build();
+
+                categoriaEventoRepository.saveAndFlush(categoria);
+
+                statusEventoRepository.saveAndFlush(StatusEvento.builder() //
+                                .idEventoStatus(1) //
+                                .nomeStatus("Aberto para inscrições") //
+                                .build());
+                statusEventoRepository.saveAndFlush(StatusEvento.builder() //
+                                .idEventoStatus(2) //
+                                .nomeStatus("Em andamento") //
+                                .build());
+                statusEventoRepository.saveAndFlush(StatusEvento.builder() //
+                                .idEventoStatus(3) //
+                                .nomeStatus("Concluído") //
+                                .build());
+                statusEventoRepository.saveAndFlush(StatusEvento.builder() //
+                                .idEventoStatus(4) //
+                                .nomeStatus("Cancelado") //
+                                .build());
+
+                eventoRepository.saveAndFlush(evento);
+                eventoRepository.saveAndFlush(evento2);
+
                 mockMvc.perform(MockMvcRequestBuilders.get("/evento/status_aberto")) //
                                 .andDo(MockMvcResultHandlers.print()) //
                                 .andExpect(MockMvcResultMatchers.status().isOk()) //
@@ -140,7 +174,7 @@ public class EventoControllerIntTest {
         @Test
         public void should_listByCategoria() throws Exception {
                 categoriaEventoRepository.saveAndFlush(categoria);
-
+                
                 mockMvc.perform(MockMvcRequestBuilders.get("/evento/categoria=1")) //
                                 .andDo(MockMvcResultHandlers.print()) //
                                 .andExpect(MockMvcResultMatchers.status().isOk()) //
@@ -155,6 +189,32 @@ public class EventoControllerIntTest {
                 mockMvc.perform(MockMvcRequestBuilders.get("/evento/categoria=1000")) //
                                 .andDo(MockMvcResultHandlers.print()) //
                                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+        }
+
+        @Test
+        public void should_listByDate() throws Exception {
+                categoriaEventoRepository.saveAndFlush(categoria);
+                statusEventoRepository.saveAndFlush(status);
+
+                Evento model = Evento.builder() //
+                                .idEvento(1) //
+                                .categoriaEvento(categoria) //
+                                .statusEvento(status) //
+                                .nome("Nome") //
+                                .dataHoraInicio(montaDate(1, 1, 2020)) //
+                                .dataHoraFim(montaDate(1, 1, 2020)) //
+                                .local("Local") //
+                                .descricao("Descricao") //
+                                .limiteVagas(10) //
+                                .build();
+
+                eventoRepository.saveAndFlush(model);
+
+                mockMvc.perform(MockMvcRequestBuilders.get("/evento/data/1/1/2020")) //
+                                .andDo(MockMvcResultHandlers.print()) //
+                                .andExpect(MockMvcResultMatchers.status().isOk()) //
+                                .andExpect(MockMvcResultMatchers.content()
+                                                .contentType(MediaType.APPLICATION_JSON_UTF8));
         }
 
         @Test
@@ -305,7 +365,7 @@ public class EventoControllerIntTest {
                                 .descricao("Descricao") //
                                 .limiteVagas(10) //
                                 .build();
-                                
+
                 categoriaEventoRepository.saveAndFlush(categoria);
                 statusEventoRepository.saveAndFlush(status);
                 statusEventoRepository.saveAndFlush(status);
@@ -327,32 +387,41 @@ public class EventoControllerIntTest {
         @Test
         public void shold_cancela() throws Exception {
 
-                Evento e = Evento.builder() //
-                                .idEvento(2) //
-                                .categoriaEvento(categoria) //
-                                .statusEvento(status) //
-                                .nome("Nome") //
-                                .dataHoraInicio(new Date()) //
-                                .dataHoraFim(new Date()) //
-                                .local("Local") //
-                                .descricao("Descricao") //
-                                .limiteVagas(10) //
-                                .build();
-                                
+                Evento evento2 = Evento.builder() //
+                        .idEvento(2) //
+                        .categoriaEvento(categoria) //
+                        .statusEvento(status) //
+                        .nome("Nome") //
+                        .dataHoraInicio(datePlus(dayPlusOne(), 10)) //
+                        .dataHoraFim(datePlus(dayPlusOne(), 10)) //
+                        .local("Local") //
+                        .descricao("Descricao") //
+                        .limiteVagas(10) //
+                        .build();
+
                 categoriaEventoRepository.saveAndFlush(categoria);
-                statusEventoRepository.saveAndFlush(status);
-                statusEventoRepository.saveAndFlush(status);
-                statusEventoRepository.saveAndFlush(status);
-                statusEventoRepository.saveAndFlush(status);
-                statusEventoRepository.saveAndFlush(status);
+
+                statusEventoRepository.saveAndFlush(StatusEvento.builder() //
+                                .idEventoStatus(1) //
+                                .nomeStatus("Aberto para inscrições") //
+                                .build());
+                statusEventoRepository.saveAndFlush(StatusEvento.builder() //
+                                .idEventoStatus(2) //
+                                .nomeStatus("Em andamento") //
+                                .build());
+                statusEventoRepository.saveAndFlush(StatusEvento.builder() //
+                                .idEventoStatus(3) //
+                                .nomeStatus("Concluído") //
+                                .build());
                 statusEventoRepository.saveAndFlush(StatusEvento.builder() //
                                 .idEventoStatus(4) //
                                 .nomeStatus("Cancelado") //
                                 .build());
-                eventoRepository.saveAndFlush(evento);
-                eventoRepository.saveAndFlush(e);
 
-                mockMvc.perform(MockMvcRequestBuilders.put("/evento/cancela/1") //
+                eventoRepository.saveAndFlush(evento);
+                eventoRepository.saveAndFlush(evento2);
+
+                mockMvc.perform(MockMvcRequestBuilders.put("/evento/cancela/"+ evento2.getIdEvento()) //
                                 .contentType(MediaType.APPLICATION_JSON)) //
                                 .andDo(MockMvcResultHandlers.print()) //
                                 .andExpect(MockMvcResultMatchers.status().isOk());
